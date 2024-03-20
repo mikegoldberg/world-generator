@@ -1,32 +1,47 @@
 import {
   FormControl,
   FormLabel,
-  Input,
   InputGroup,
   InputRightElement,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
 } from "@chakra-ui/react";
 
-interface InputControlProps {
+interface NumberInputControlProps {
   label: string;
   value: number;
-  onChange: (e: string) => void;
+  onChange: (value: number) => void;
   children?: any;
 }
 
-function InputControl({ label, value, onChange, children }: InputControlProps) {
+function NumberInputControl({
+  label,
+  value,
+  onChange,
+  children,
+}: NumberInputControlProps) {
   return (
     <FormControl>
       <FormLabel>{label}</FormLabel>
       <InputGroup>
-        <Input
-          autoComplete="off"
+        <NumberInput
+          min={0}
           value={value}
-          onChange={(e: any) => onChange(e.target.value)}
-        />
+          onChange={(_, value) => onChange(value)}
+        >
+          <NumberInputField />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
         <InputRightElement>{children}</InputRightElement>
       </InputGroup>
     </FormControl>
   );
 }
 
-export default InputControl;
+export default NumberInputControl;

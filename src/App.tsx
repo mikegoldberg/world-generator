@@ -20,7 +20,7 @@ function App() {
           gap="5px"
           background="#fff"
         >
-          <Heightmap height={400} width={400} />
+          <Heightmap height={120} width={120} />
         </Flex>
       </Flex>
       <Box
