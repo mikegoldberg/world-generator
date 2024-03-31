@@ -1,28 +1,22 @@
-import { Button, Flex, IconButton } from "@chakra-ui/react";
+import { Flex, IconButton } from "@chakra-ui/react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { TerrainContext } from "../../context/terrain";
-import { CanvasTexture } from "three";
-import Preview from "./preview";
 import SliderControl from "../controls/slider";
 import { makeNoise3D } from "open-simplex-noise";
 import { makeCylinderSurface } from "fractal-noise";
 import * as StackBlur from "stackblur-canvas";
 import { FaRandom } from "react-icons/fa";
 import NumberInputControl from "../controls/input";
+import ControlPanel from "../control-panel";
 
-interface HeightmapProps {
-  width: number;
-  height: number;
-}
-
-function Heightmap({ width, height }: HeightmapProps) {
-  const { displacementScale, setDisplacementScale, setDisplacementMap } =
+function Heightmap() {
+  const { setDisplacementScale, setDisplacementMap } =
     useContext(TerrainContext);
-  const [previewSrc, setPreviewSrc] = useState(null);
-  const [seed, setSeed] = useState(0);
-  const [blur, setBlur] = useState(50);
-  const [heightScale, setHeightScale] = useState(0.5);
-  // const [contrast, setContrast] = useState(12);
+  const [height, setHeight] = useState(1024);
+  const [width, setWidth] = useState(1024);
+  const [seed, setSeed] = useState(Math.floor(Math.random() * 1000));
+  const [blur, setBlur] = useState(20);
+  const [heightScale, setHeightScale] = useState(1);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -39,8 +33,8 @@ function Heightmap({ width, height }: HeightmapProps) {
     const imageData = ctx.createImageData(width, height);
     const noise3D = makeNoise3D(seed);
     const result = makeCylinderSurface(width, height, noise3D, {
-      frequency: 0.04,
-      octaves: 1,
+      frequency: 0.005,
+      octaves: 4,
     });
 
     for (let x = 0; x < width; x++) {
@@ -58,20 +52,12 @@ function Heightmap({ width, height }: HeightmapProps) {
     StackBlur.imageDataRGBA(imageData, 0, 0, width, height, blur);
     ctx.putImageData(imageData, 0, 0);
 
-    apply(imageData);
-  }
-
-  function apply(imageData: ImageData) {
-    if (!canvasRef.current) {
-      return;
-    }
-
     setDisplacementMap(imageData);
     setDisplacementScale(heightScale);
   }
 
   return (
-    <Flex gap="10px" flexDirection="column" width="280px">
+    <ControlPanel id="heightmap">
       <SliderControl
         label="Height Scale"
         max={20}
@@ -82,7 +68,7 @@ function Heightmap({ width, height }: HeightmapProps) {
       />
       <SliderControl
         label="Blur"
-        max={100}
+        max={500}
         min={1}
         step={1}
         defaultValue={blur}
@@ -106,8 +92,7 @@ function Heightmap({ width, height }: HeightmapProps) {
         </Button>
       </Flex> */}
       <canvas id="canvas" ref={canvasRef} height={height} width={width} />
-      {previewSrc && <Preview src={previewSrc} />}
-    </Flex>
+    </ControlPanel>
   );
 }
 

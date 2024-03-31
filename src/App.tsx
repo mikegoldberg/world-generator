@@ -20,7 +20,7 @@ function App() {
           gap="5px"
           background="#fff"
         >
-          <Heightmap height={120} width={120} />
+          <Heightmap />
         </Flex>
       </Flex>
       <Box
@@ -29,6 +29,7 @@ function App() {
         top={0}
         position="absolute"
         height="100vh"
+        bg="#ddd"
       >
         <Stage />
       </Box>

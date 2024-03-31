@@ -1,13 +1,21 @@
 import { Canvas } from "@react-three/fiber";
 import Terrain from "./components/terrain";
+import { CameraControls } from "@react-three/drei";
 import Camera from "./components/camera";
 
 function Stage({}: any) {
   return (
-    <Canvas shadows performance={{ min: 11 }}>
+    <Canvas shadows gl={{ localClippingEnabled: true }}>
       <Camera />
-      <ambientLight intensity={Math.PI / 2} />
-      <directionalLight position={[2, 2, 12]} intensity={12} castShadow />
+      <CameraControls makeDefault />
+      <ambientLight intensity={0.5} />
+      <directionalLight
+        position={[2, 2, 4]}
+        intensity={2}
+        castShadow={true}
+        shadow-mapSize-width={32}
+        shadow-mapSize-height={32}
+      />
       <Terrain />
     </Canvas>
   );
