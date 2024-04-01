@@ -16,16 +16,17 @@ import { useFrame } from "@react-three/fiber";
 function Terrain({ ...props }: any) {
   const { displacementMap, displacementScale } = useContext(TerrainContext);
   const planeRef = useRef<any>();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [mousePosition, setMousePosition] = useState({
+    point: { x: 0, y: 0, z: 0 },
+  });
   const [uniforms, setUniforms] = useState({
-    u_mouse: { value: new Vector2(4, 0) },
+    u_mouse: { value: new Vector2(0, 0) },
     u_resolution: { value: new Vector2(window.innerWidth, window.innerHeight) },
     u_time: { value: 0.0 },
   });
 
   useEffect(() => {
     if (planeRef.current) {
-      // return;
       const geometry = planeRef.current;
       const positions = geometry.attributes.position.array;
       let w, h, x, y;
@@ -54,7 +55,9 @@ function Terrain({ ...props }: any) {
   useFrame(({ clock: { elapsedTime } }) => {
     setUniforms({
       ...uniforms,
-      u_mouse: { value: new Vector2(mousePosition.x, mousePosition.y) },
+      u_mouse: {
+        value: new Vector2(mousePosition.point.x, mousePosition.point.z),
+      },
       u_time: { value: elapsedTime },
     });
   });
@@ -65,6 +68,7 @@ function Terrain({ ...props }: any) {
       position={[0, 0, 0]}
       rotation={[MathUtils.DEG2RAD * -90, 0, 0]}
       receiveShadow={true}
+      onPointerUp={(pointer) => console.log(pointer.point)}
       onPointerMove={setMousePosition}
       // customDepthMaterial={
       //   new MeshDepthMaterial({

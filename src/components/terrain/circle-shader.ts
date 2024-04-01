@@ -46,19 +46,20 @@ uniform float u_time;
 varying vec2 vPosition;
 
 void main() {
-    vec2 uv = u_mouse.xy/u_resolution.xy;
+    vec2 uv = u_mouse.xy / u_resolution.xy;
     
-    float x = uv.x - vPosition.x;
-    float y = uv.y - vPosition.y;
+    float x =  u_mouse.x  - vPosition.x; // uv.x - vPosition.x;
+    float y =  u_mouse.y - vPosition.y * -1.0; // uv.y - vPosition.y;
     
     vec3 col = vec3(0, 1.0, 0);
     
     float dist = sqrt(x * x + y * y);
     
-    if (dist < 1.0 && dist > .95) {
-        // col = 0.5 + 0.5*cos(u_time+uv.xyx+vec3(0,2,4));
-        //csm_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-        csm_Emissive = vec3(.05, .05, .05);
+    if (dist < 1.0 && dist > .9) {
+        col = 0.5 + 0.5*cos(u_time+uv.xyx+vec3(0,2,4));
+        gl_FragColor = vec4(col, 1.0);
+        // csm_Emissive = vec3(.15, .15, .15);
+        return;
     }
 
     // Output to screen
