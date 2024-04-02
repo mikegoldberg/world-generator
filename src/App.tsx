@@ -1,38 +1,14 @@
-import { Box, Flex } from "@chakra-ui/react";
 import Stage from "./Stage";
 import { TerrainProvider } from "./context/terrain";
-import Heightmap from "./components/heightmap";
+import LeftPanel from "./layouts/left-panel";
+import TopPanel from "./layouts/top-panel";
 
 function App() {
   return (
     <TerrainProvider>
-      <Flex
-        flexDirection="column"
-        position="relative"
-        width="300px"
-        zIndex={10}
-        top={"20px"}
-        left={"20px"}
-      >
-        <Flex
-          flexDirection={"column"}
-          padding="10px"
-          gap="5px"
-          background="#fff"
-        >
-          <Heightmap />
-        </Flex>
-      </Flex>
-      <Box
-        userSelect="none"
-        width="100%"
-        top={0}
-        position="absolute"
-        height="100vh"
-        bg="#ddd"
-      >
-        <Stage />
-      </Box>
+      <LeftPanel />
+      <TopPanel />
+      <Stage />
     </TerrainProvider>
   );
 }

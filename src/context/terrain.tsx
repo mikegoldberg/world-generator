@@ -8,6 +8,10 @@ export function TerrainProvider({ children }: any) {
     null
   );
   const [displacementScale, setDisplacementScale] = useState(4);
+  const [isSculptMode, setIsSculptMode] = useState(false);
+  const [modificationLayer, setModificationLayer] = useState<any>(null);
+  const [mousePosition, setMousePosition] = useState<any>();
+  const [isSculpting, setIsSculpting] = useState(false);
 
   return (
     <TerrainContext.Provider
@@ -16,6 +20,14 @@ export function TerrainProvider({ children }: any) {
         setDisplacementMap,
         displacementScale,
         setDisplacementScale,
+        isSculptMode,
+        setIsSculptMode,
+        modificationLayer,
+        setModificationLayer,
+        mousePosition,
+        setMousePosition,
+        isSculpting,
+        setIsSculpting,
       }}
     >
       {children}

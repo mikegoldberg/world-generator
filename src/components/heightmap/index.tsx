@@ -1,4 +1,4 @@
-import { Flex, IconButton } from "@chakra-ui/react";
+import { IconButton } from "@chakra-ui/react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { TerrainContext } from "../../context/terrain";
 import SliderControl from "../controls/slider";

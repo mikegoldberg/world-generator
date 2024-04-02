@@ -15,7 +15,7 @@ function ControlPanel({ id, children }: any) {
   }, [isHidden]);
 
   return (
-    <Flex gap="2px" flexDirection="column" width="280px">
+    <Flex gap="2px" flexDirection="column" width="180px">
       <Box textAlign={"right"}>
         <IconButton
           fontSize="24px"
@@ -32,7 +32,7 @@ function ControlPanel({ id, children }: any) {
         gap="10px"
         display={isHidden ? "none" : "flex"}
         flexDirection="column"
-        width="280px"
+        width="180px"
       >
         {children}
       </Flex>
