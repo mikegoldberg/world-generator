@@ -4,8 +4,13 @@ import { PiBezierCurve } from "react-icons/pi";
 import { TerrainContext } from "../../context/terrain";
 
 function TerrainSculptingIcon() {
-  const { isSculptMode, setIsSculptMode, setModificationLayer, mousePosition } =
-    useContext(TerrainContext);
+  const {
+    isSculptMode,
+    setIsSculptMode,
+    isSculpting,
+    setModificationLayer,
+    mousePosition,
+  } = useContext(TerrainContext);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -24,7 +29,7 @@ function TerrainSculptingIcon() {
   }, []);
 
   useEffect(() => {
-    if (canvasRef.current && mousePosition) {
+    if (canvasRef.current && mousePosition && isSculptMode && isSculpting) {
       const ctx = canvasRef.current.getContext("2d");
 
       if (!ctx) {
@@ -34,14 +39,14 @@ function TerrainSculptingIcon() {
       const y = (1024 / 8) * (mousePosition.point.z + 4);
       const x = (1024 / 8) * (mousePosition.point.x + 4);
 
-      ctx.fillStyle = "#333";
+      ctx.fillStyle = "rgba(255, 255, 255, 0.01)";
       ctx.beginPath();
       ctx.arc(x, y, 100, 0, 2 * Math.PI);
       ctx.fill();
 
       setModificationLayer(ctx.getImageData(0, 0, 1024, 1024));
     }
-  }, [mousePosition]);
+  }, [mousePosition, isSculptMode, isSculpting]);
 
   return (
     <>
