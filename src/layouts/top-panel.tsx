@@ -1,5 +1,6 @@
 import { Flex } from "@chakra-ui/react";
-import TerrainSculptingIcon from "../components/editing-icons/terrain-sculpting-icon";
+import SculptBrush from "../components/brushes/sculpt";
+import TextureBrush from "../components/brushes/texture";
 
 function TopPanel() {
   return (
@@ -11,7 +12,8 @@ function TopPanel() {
       left={"240px"}
       gap="10px"
     >
-      <TerrainSculptingIcon />
+      <SculptBrush />
+      <TextureBrush />
     </Flex>
   );
 }

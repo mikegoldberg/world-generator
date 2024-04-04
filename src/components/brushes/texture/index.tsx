@@ -1,9 +1,9 @@
 import { IconButton } from "@chakra-ui/react";
 import { useContext, useEffect, useRef } from "react";
-import { PiBezierCurve } from "react-icons/pi";
-import { TerrainContext } from "../../context/terrain";
+import { TerrainContext } from "../../../context/terrain";
+import { FaSprayCanSparkles } from "react-icons/fa6";
 
-function TerrainSculptingIcon() {
+function TextureBrush() {
   const {
     isSculptMode,
     setIsSculptMode,
@@ -64,7 +64,7 @@ function TerrainSculptingIcon() {
         }}
       />
       <IconButton
-        icon={<PiBezierCurve />}
+        icon={<FaSprayCanSparkles />}
         aria-label="sculpt"
         borderRadius="50%"
         variant={"outline"}
@@ -80,4 +80,4 @@ function TerrainSculptingIcon() {
   );
 }
 
-export default TerrainSculptingIcon;
+export default TextureBrush;

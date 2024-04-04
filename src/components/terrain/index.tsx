@@ -1,9 +1,15 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { MathUtils, MeshPhysicalMaterial, Vector2 } from "three";
+import {
+  MathUtils,
+  MeshPhysicalMaterial,
+  RepeatWrapping,
+  TextureLoader,
+  Vector2,
+} from "three";
 import CustomShaderMaterial from "three-custom-shader-material";
 import { TerrainContext } from "../../context/terrain";
-import brushShader from "../../shaders/brush";
-import { useFrame } from "@react-three/fiber";
+import groundShader from "../../shaders/ground";
+import { useFrame, useLoader } from "@react-three/fiber";
 
 function Terrain() {
   const {
@@ -16,10 +22,12 @@ function Terrain() {
     setIsSculpting,
   } = useContext(TerrainContext);
   const planeRef = useRef<any>();
-  const [uniforms, setUniforms] = useState({
+  const shaderRef = useRef<any>();
+  const [uniforms, setUniforms] = useState<any>({
     uMouse: { value: new Vector2(0, 0) },
     uResolution: { value: new Vector2(window.innerWidth, window.innerHeight) },
     uBrushEnabled: { value: false },
+    uGrassAlbedo: { value: null },
   });
 
   useEffect(() => {
@@ -30,6 +38,28 @@ function Terrain() {
       },
     });
   }, [isSculptMode]);
+
+  const [grassColor, normalMap] = useLoader(TextureLoader, [
+    "./Grass004_1K-JPG/Grass004_1K-JPG_Color.jpg",
+    "./Grass004_1K-JPG/Grass004_1K-JPG_NormalGL.jpg",
+  ]);
+
+  useEffect(() => {
+    if (grassColor && normalMap) {
+      grassColor.wrapS = RepeatWrapping;
+      grassColor.wrapT = RepeatWrapping;
+      grassColor.repeat = new Vector2(4, 4);
+      normalMap.wrapS = RepeatWrapping;
+      normalMap.wrapT = RepeatWrapping;
+      normalMap.repeat = new Vector2(4, 4);
+    }
+    setUniforms({
+      ...uniforms,
+      uGrassAlbedo: {
+        value: grassColor,
+      },
+    });
+  }, [grassColor, normalMap]);
 
   useEffect(() => {
     if (planeRef.current) {
@@ -59,12 +89,10 @@ function Terrain() {
 
   useFrame(() => {
     if (mousePosition) {
-      setUniforms({
-        ...uniforms,
-        uMouse: {
-          value: new Vector2(mousePosition.point.x, mousePosition.point.z),
-        },
-      });
+      shaderRef.current.uniforms.uMouse.value = new Vector2(
+        mousePosition.point.x,
+        mousePosition.point.z
+      );
     }
   });
 
@@ -95,12 +123,18 @@ function Terrain() {
       >
         <planeGeometry args={[8, 8, 64, 64]} ref={planeRef} />
         <CustomShaderMaterial
+          ref={shaderRef}
           baseMaterial={MeshPhysicalMaterial}
-          vertexShader={brushShader.vertexShader}
-          fragmentShader={brushShader.fragmentShader}
+          vertexShader={groundShader.vertexShader}
+          fragmentShader={groundShader.fragmentShader}
+          map={grassColor}
+          normalMap={normalMap}
+          normalScale={new Vector2(0.3, 0.3)}
+          // roughness={0}
+          // metalness={0}
           silent
           uniforms={uniforms}
-          color={0x005500}
+          // color={0xdd2200}
         />
       </mesh>
     </>

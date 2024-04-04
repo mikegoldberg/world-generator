@@ -26,13 +26,13 @@ function Stage() {
       >
         <Camera />
         <CameraControls makeDefault enabled={!isSculptMode} />
-        <ambientLight intensity={0.3} />
+        <ambientLight intensity={0.1} />
         <directionalLight
-          position={[2, 2, 4]}
-          intensity={1}
+          position={[1, 2, 1]}
+          intensity={3}
           castShadow={true}
-          shadow-mapSize-width={32}
-          shadow-mapSize-height={32}
+          shadow-mapSize-width={312}
+          shadow-mapSize-height={312}
         />
         <Terrain />
       </Canvas>

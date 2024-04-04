@@ -1,7 +1,9 @@
 const vertexShader = `
+varying vec2 vUv;
 varying vec2 vPosition;
 
 void main() {
+    vUv = uv * 2.;
     vPosition = position.xy;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }
@@ -11,11 +13,13 @@ const fragmentShader = `
 uniform vec2 uMouse;
 uniform vec2 uResolution;
 uniform bool uBrushEnabled;
+uniform sampler2D uGrassAlbedo;
 
+varying vec2 vUv;
 varying vec2 vPosition;
 
 void main() {
-    vec2 uv = uMouse.xy / uResolution.xy;
+    // vec2 uv = uMouse.xy / uResolution.xy;
     float x =  uMouse.x  - vPosition.x;
     float y =  uMouse.y - vPosition.y * -1.0;
     vec3 baseColor = vec3(0, 1.0, 0);
@@ -29,7 +33,7 @@ void main() {
         }
     }
 
-    csm_DiffuseColor = vec4(baseColor ,1.0);
+    // csm_DiffuseColor = texture2D(uGrassAlbedo, vUv * 12.0);
 }
 `;
 
