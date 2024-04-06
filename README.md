@@ -5,4 +5,4 @@ World Generation Tool
 - to install, `pnpm install`
 - to run, `pnpm dev`
 
-![Screenshot 2024-04-02 at 5 23 19 PM](https://github.com/mikegoldberg/world-generator/assets/85044978/e6084634-d0a3-4a7e-903d-466644573d53)
+![Screenshot 2024-04-06 at 11 20 34 AM](https://github.com/mikegoldberg/world-generator/assets/85044978/e5072966-219c-46c6-ace6-c92374f54101)
