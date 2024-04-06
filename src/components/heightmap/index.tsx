@@ -1,4 +1,14 @@
-import { IconButton } from "@chakra-ui/react";
+import {
+  Flex,
+  FormControl,
+  FormLabel,
+  IconButton,
+  InputGroup,
+  InputRightAddon,
+  InputRightElement,
+  NumberInput,
+  NumberInputField,
+} from "@chakra-ui/react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { TerrainContext } from "../../context/terrain";
 import SliderControl from "../controls/slider";
@@ -57,7 +67,7 @@ function Heightmap() {
   }
 
   return (
-    <ControlPanel id="heightmap">
+    <Flex flexDirection="column" gap="10px">
       <SliderControl
         label="Height Scale"
         max={20}
@@ -74,25 +84,39 @@ function Heightmap() {
         defaultValue={blur}
         onChange={setBlur}
       />
-      <NumberInputControl
+      <FormControl>
+        <FormLabel>{"Seed"}</FormLabel>
+        <InputGroup>
+          <NumberInput
+            min={0}
+            value={seed}
+            onChange={(_, value: number) => setSeed(value)}
+          >
+            <NumberInputField />
+          </NumberInput>
+          <InputRightElement>
+            <IconButton
+              aria-label="random seed"
+              fontSize="18px"
+              icon={<FaRandom />}
+              onClick={() => setSeed(Math.round(Math.random() * 1000))}
+            />
+          </InputRightElement>
+        </InputGroup>
+      </FormControl>
+      {/* <NumberInputControl
         label="Seed"
         value={seed}
         onChange={(value: number) => setSeed(value)}
       >
-        <IconButton
-          aria-label="random seed"
-          fontSize="18px"
-          icon={<FaRandom />}
-          onClick={() => setSeed(Math.round(Math.random() * 1000))}
-        />
-      </NumberInputControl>
+      </NumberInputControl> */}
       {/* <Flex gap="10px">
         <Button flex={1} onClick={apply}>
           {"Apply"}
         </Button>
       </Flex> */}
       <canvas id="canvas" ref={canvasRef} height={height} width={width} />
-    </ControlPanel>
+    </Flex>
   );
 }
 

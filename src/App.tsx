@@ -1,14 +1,15 @@
-import Stage from "./Stage";
+import { Flex } from "@chakra-ui/react";
+import Stage from "./layouts/stage";
 import { TerrainProvider } from "./context/terrain";
 import LeftPanel from "./layouts/left-panel";
-import TopPanel from "./layouts/top-panel";
 
 function App() {
   return (
     <TerrainProvider>
-      <LeftPanel />
-      <TopPanel />
-      <Stage />
+      <Flex height={"100vh"}>
+        <LeftPanel />
+        <Stage />
+      </Flex>
     </TerrainProvider>
   );
 }

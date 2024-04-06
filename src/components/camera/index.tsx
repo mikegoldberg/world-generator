@@ -14,11 +14,8 @@ function Camera() {
       makeDefault
       castShadow={true}
     >
-      <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
-        <GizmoViewport
-          axisColors={["#33cc33", "#aaeeaa", "#55ee55"]}
-          labelColor="black"
-        />
+      <GizmoHelper alignment="bottom-right" margin={[70, 70]}>
+        <GizmoViewport />
       </GizmoHelper>
     </OrthographicCamera>
   );
