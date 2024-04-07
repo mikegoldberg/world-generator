@@ -2,6 +2,7 @@ import { Box, Flex, useConst } from "@chakra-ui/react";
 import { Texture } from "three";
 import SliderControl from "../controls/slider";
 import { useEffect, useRef, useState } from "react";
+import Preview from "./preview";
 
 interface BrushProps {
   canvas: null | HTMLCanvasElement;
@@ -57,44 +58,7 @@ function Brush({ canvas, textures = null, onCanvasUpdate }: BrushProps) {
       border={"1px solid rgba(255, 255, 255, .1)"}
     >
       <Flex height="100px" gap="8px">
-        <Flex
-          height="100px"
-          width="100px"
-          justifyContent="center"
-          alignItems="center"
-          border={"1px solid rgba(255, 255, 255, 0.04)"}
-          position="relative"
-          _before={{
-            content: '" "',
-            position: "absolute",
-            left: "50%",
-            height: "100%",
-            background: "rgba(255, 255, 255, 0.04)",
-            width: "1px",
-          }}
-          _after={{
-            content: '" "',
-            position: "absolute",
-            top: "50%",
-            height: "1px",
-            width: "100%",
-            background: "rgba(255, 255, 255, 0.04)",
-          }}
-        >
-          <Box
-            borderRadius="50%"
-            width={`${(size / maxSize) * 80}px`}
-            height={`${(size / maxSize) * 80}px`}
-            border="1px solid rgba(255, 255, 255, 0.5)"
-          />
-          <Box
-            borderRadius="50%"
-            position="absolute"
-            width={`${(size / maxSize) * 80 * fade}px`}
-            height={`${(size / maxSize) * 80 * fade}px`}
-            border="1px solid rgba(255, 255, 255, 0.2)"
-          />
-        </Flex>
+        <Preview size={size} fade={fade} maxSize={maxSize} />
         <Flex gap="12px" flex={1}>
           <SliderControl
             label="Size"
