@@ -1,13 +1,17 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import SculptBrush from "../../components/brushes/sculpt";
+import Brush from "../../components/brush";
 
 function Sculpt() {
   return (
-    <Grid>
-      <GridItem>
-        <SculptBrush />
-      </GridItem>
-    </Grid>
+    <Flex flexDirection={"column"} gap="10px">
+      <Brush canvas={null} textures={null} />
+      <Grid>
+        <GridItem>
+          <SculptBrush />
+        </GridItem>
+      </Grid>
+    </Flex>
   );
 }
 

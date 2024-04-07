@@ -1,5 +1,5 @@
 import {
-  FormControl,
+  Flex,
   FormLabel,
   InputGroup,
   InputRightElement,
@@ -24,8 +24,8 @@ function NumberInputControl({
   children,
 }: NumberInputControlProps) {
   return (
-    <FormControl>
-      <FormLabel>{label}</FormLabel>
+    <Flex>
+      <FormLabel margin="0">{label}</FormLabel>
       <InputGroup>
         <NumberInput
           min={0}
@@ -40,7 +40,7 @@ function NumberInputControl({
         </NumberInput>
         <InputRightElement>{children}</InputRightElement>
       </InputGroup>
-    </FormControl>
+    </Flex>
   );
 }
 

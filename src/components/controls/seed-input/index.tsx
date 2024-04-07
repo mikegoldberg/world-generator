@@ -1,4 +1,5 @@
 import {
+  Flex,
   FormControl,
   FormLabel,
   Input,
@@ -16,8 +17,8 @@ interface InputControlProps {
 
 function InputControl({ label, value, onChange, children }: InputControlProps) {
   return (
-    <FormControl>
-      <FormLabel>{label}</FormLabel>
+    <Flex gap="10px">
+      <FormLabel margin="0">{label}</FormLabel>
       <InputGroup>
         <Input
           autoComplete="off"
@@ -26,7 +27,7 @@ function InputControl({ label, value, onChange, children }: InputControlProps) {
         />
         <InputRightElement>{children}</InputRightElement>
       </InputGroup>
-    </FormControl>
+    </Flex>
   );
 }
 

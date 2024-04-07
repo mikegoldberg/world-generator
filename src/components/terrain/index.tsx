@@ -40,8 +40,8 @@ function Terrain() {
   }, [isSculptMode]);
 
   const [grassColor, normalMap] = useLoader(TextureLoader, [
-    "./Grass004_1K-JPG/Grass004_1K-JPG_Color.jpg",
-    "./Grass004_1K-JPG/Grass004_1K-JPG_NormalGL.jpg",
+    "./textures/Grass004_1K-JPG_Color.jpg",
+    "./textures/Grass004_1K-JPG_NormalGL.jpg",
   ]);
 
   useEffect(() => {
@@ -127,14 +127,15 @@ function Terrain() {
           baseMaterial={MeshPhysicalMaterial}
           vertexShader={groundShader.vertexShader}
           fragmentShader={groundShader.fragmentShader}
-          map={grassColor}
-          normalMap={normalMap}
-          normalScale={new Vector2(0.3, 0.3)}
+          // map={grassColor}
+          // normalMap={normalMap}
+          // normalScale={new Vector2(0.3, 0.3)}
           // roughness={0}
           // metalness={0}
           silent
           uniforms={uniforms}
-          // color={0xdd2200}
+          color={0x555555}
+          // wireframe={true}
         />
       </mesh>
     </>

@@ -4,7 +4,7 @@ import {
   FormLabel,
   IconButton,
   InputGroup,
-  InputRightAddon,
+  // InputRightAddon,
   InputRightElement,
   NumberInput,
   NumberInputField,
@@ -16,8 +16,8 @@ import { makeNoise3D } from "open-simplex-noise";
 import { makeCylinderSurface } from "fractal-noise";
 import * as StackBlur from "stackblur-canvas";
 import { FaRandom } from "react-icons/fa";
-import NumberInputControl from "../controls/input";
-import ControlPanel from "../control-panel";
+// import NumberInputControl from "../controls/input";
+// import ControlPanel from "../control-panel";
 
 function Heightmap() {
   const { setDisplacementScale, setDisplacementMap } =
@@ -69,7 +69,7 @@ function Heightmap() {
   return (
     <Flex flexDirection="column" gap="10px">
       <SliderControl
-        label="Height Scale"
+        label="Scale"
         max={20}
         min={-20}
         step={0.01}
@@ -84,8 +84,8 @@ function Heightmap() {
         defaultValue={blur}
         onChange={setBlur}
       />
-      <FormControl>
-        <FormLabel>{"Seed"}</FormLabel>
+      <Flex gap="10px" alignItems={"center"}>
+        <FormLabel fontSize={"sm"}>{"Seed"}</FormLabel>
         <InputGroup>
           <NumberInput
             min={0}
@@ -103,7 +103,7 @@ function Heightmap() {
             />
           </InputRightElement>
         </InputGroup>
-      </FormControl>
+      </Flex>
       {/* <NumberInputControl
         label="Seed"
         value={seed}

@@ -1,5 +1,5 @@
 import {
-  FormControl,
+  Flex,
   FormLabel,
   Slider,
   SliderFilledTrack,
@@ -13,6 +13,7 @@ interface SliderControlProps {
   max: number;
   min: number;
   step: number;
+  orientation?: "horizontal" | "vertical";
   onChange: (value: number) => void;
 }
 function SliderControl({
@@ -21,11 +22,18 @@ function SliderControl({
   min,
   step,
   defaultValue,
+  orientation = "horizontal",
   onChange,
 }: SliderControlProps) {
   return (
-    <FormControl>
-      <FormLabel>{label}</FormLabel>
+    <Flex
+      flexDirection={"column"}
+      flexFlow={orientation === "horizontal" ? "column" : "column-reverse"}
+      gap="5px"
+    >
+      <FormLabel margin={0} fontSize={"sm"}>
+        {label}
+      </FormLabel>
       <Slider
         aria-label={label}
         defaultValue={defaultValue}
@@ -33,13 +41,14 @@ function SliderControl({
         min={min}
         step={step}
         onChange={onChange}
+        orientation={orientation}
       >
         <SliderTrack>
           <SliderFilledTrack />
         </SliderTrack>
         <SliderThumb />
       </Slider>
-    </FormControl>
+    </Flex>
   );
 }
 

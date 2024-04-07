@@ -66,7 +66,6 @@ function TextureBrush() {
       <IconButton
         icon={<FaSprayCanSparkles />}
         aria-label="sculpt"
-        borderRadius="50%"
         variant={"outline"}
         border={`2px solid ${
           isSculptMode ? "#fff" : "rgba(255, 255, 255, 0.5)"
