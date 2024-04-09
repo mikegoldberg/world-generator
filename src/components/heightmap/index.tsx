@@ -1,27 +1,21 @@
 import {
   Flex,
-  FormControl,
   FormLabel,
   IconButton,
   InputGroup,
-  // InputRightAddon,
   InputRightElement,
   NumberInput,
   NumberInputField,
 } from "@chakra-ui/react";
-import { useContext, useEffect, useRef, useState } from "react";
-import { TerrainContext } from "../../context/terrain";
+import { useEffect, useRef, useState } from "react";
 import SliderControl from "../controls/slider";
 import { makeNoise3D } from "open-simplex-noise";
 import { makeCylinderSurface } from "fractal-noise";
 import * as StackBlur from "stackblur-canvas";
 import { FaRandom } from "react-icons/fa";
-// import NumberInputControl from "../controls/input";
-// import ControlPanel from "../control-panel";
+import store from "../../store";
 
 function Heightmap() {
-  const { setDisplacementScale, setDisplacementMap } =
-    useContext(TerrainContext);
   const [height, setHeight] = useState(1024);
   const [width, setWidth] = useState(1024);
   const [seed, setSeed] = useState(Math.floor(Math.random() * 1000));
@@ -62,36 +56,42 @@ function Heightmap() {
     StackBlur.imageDataRGBA(imageData, 0, 0, width, height, blur);
     ctx.putImageData(imageData, 0, 0);
 
-    setDisplacementMap(imageData);
-    setDisplacementScale(heightScale);
+    store.setState({
+      displacementMap: imageData,
+      displacementScale: heightScale,
+    });
+  }
+
+  function handleRandomSeed() {
+    setSeed(Math.round(Math.random() * 1000));
+  }
+
+  function handleChangeSeed(_: any, value: number) {
+    setSeed(value);
   }
 
   return (
     <Flex flexDirection="column" gap="10px">
       <SliderControl
         label="Scale"
-        max={20}
-        min={-20}
-        step={0.01}
+        max={5}
+        min={-5}
+        step={0.1}
         onChange={setHeightScale}
         defaultValue={heightScale}
       />
       <SliderControl
         label="Blur"
-        max={500}
+        max={120}
         min={1}
-        step={1}
+        step={10}
         defaultValue={blur}
         onChange={setBlur}
       />
       <Flex gap="10px" alignItems={"center"}>
         <FormLabel fontSize={"sm"}>{"Seed"}</FormLabel>
         <InputGroup>
-          <NumberInput
-            min={0}
-            value={seed}
-            onChange={(_, value: number) => setSeed(value)}
-          >
+          <NumberInput min={0} value={seed} onChange={handleChangeSeed}>
             <NumberInputField />
           </NumberInput>
           <InputRightElement>
@@ -99,22 +99,11 @@ function Heightmap() {
               aria-label="random seed"
               fontSize="18px"
               icon={<FaRandom />}
-              onClick={() => setSeed(Math.round(Math.random() * 1000))}
+              onClick={handleRandomSeed}
             />
           </InputRightElement>
         </InputGroup>
       </Flex>
-      {/* <NumberInputControl
-        label="Seed"
-        value={seed}
-        onChange={(value: number) => setSeed(value)}
-      >
-      </NumberInputControl> */}
-      {/* <Flex gap="10px">
-        <Button flex={1} onClick={apply}>
-          {"Apply"}
-        </Button>
-      </Flex> */}
       <canvas id="canvas" ref={canvasRef} height={height} width={width} />
     </Flex>
   );

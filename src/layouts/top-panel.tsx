@@ -1,19 +1,18 @@
 import { Flex } from "@chakra-ui/react";
-import SculptBrush from "../components/brushes/sculpt";
-import TextureBrush from "../components/brushes/texture";
+import ShowWireframe from "../components/show-wireframe";
 
 function TopPanel() {
   return (
     <Flex
       flexDirection="row"
-      position="absolute"
       zIndex={10}
-      top={"20px"}
-      left={"240px"}
       gap="10px"
+      padding="20px"
+      position={"absolute"}
+      justifyContent={"flex-end"}
+      width="100%"
     >
-      <SculptBrush />
-      <TextureBrush />
+      <ShowWireframe />
     </Flex>
   );
 }

@@ -7,15 +7,29 @@ import Preview from "./preview";
 interface BrushProps {
   canvas: null | HTMLCanvasElement;
   textures?: null | Texture[];
-  onCanvasUpdate: Function;
+  onSizeUpdate: Function;
+  onFadeUpdate: Function;
 }
 
-function Brush({ canvas, textures = null, onCanvasUpdate }: BrushProps) {
+function Brush({
+  canvas,
+  textures = null,
+  onSizeUpdate,
+  onFadeUpdate,
+}: BrushProps) {
   const [size, setSize] = useState(80);
   const [fade, setFade] = useState(0.5);
   const maxSize = useConst(200);
   const maxFade = useConst(1.0);
   const brush = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    onSizeUpdate(size);
+  }, [size]);
+
+  useEffect(() => {
+    onFadeUpdate(fade);
+  }, [fade]);
 
   useEffect(() => {
     resetBrush();

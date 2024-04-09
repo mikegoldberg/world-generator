@@ -1,15 +1,9 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import {
-  MathUtils,
-  MeshPhysicalMaterial,
-  RepeatWrapping,
-  TextureLoader,
-  Vector2,
-} from "three";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { MathUtils, MeshPhysicalMaterial, Vector2 } from "three";
 import CustomShaderMaterial from "three-custom-shader-material";
-import { TerrainContext } from "../../context/terrain";
 import groundShader from "../../shaders/ground";
-import { useFrame, useLoader } from "@react-three/fiber";
+import { ThreeEvent, useFrame } from "@react-three/fiber";
+import store from "../../store";
 
 function Terrain() {
   const {
@@ -18,9 +12,11 @@ function Terrain() {
     modificationLayer,
     isSculptMode,
     mousePosition,
-    setMousePosition,
-    setIsSculpting,
-  } = useContext(TerrainContext);
+    showWireframe,
+    terrainAlbedo,
+    isSculpting,
+    isTexturePainting,
+  } = store();
   const planeRef = useRef<any>();
   const shaderRef = useRef<any>();
   const [uniforms, setUniforms] = useState<any>({
@@ -38,28 +34,6 @@ function Terrain() {
       },
     });
   }, [isSculptMode]);
-
-  const [grassColor, normalMap] = useLoader(TextureLoader, [
-    "./textures/Grass004_1K-JPG_Color.jpg",
-    "./textures/Grass004_1K-JPG_NormalGL.jpg",
-  ]);
-
-  useEffect(() => {
-    if (grassColor && normalMap) {
-      grassColor.wrapS = RepeatWrapping;
-      grassColor.wrapT = RepeatWrapping;
-      grassColor.repeat = new Vector2(4, 4);
-      normalMap.wrapS = RepeatWrapping;
-      normalMap.wrapT = RepeatWrapping;
-      normalMap.repeat = new Vector2(4, 4);
-    }
-    setUniforms({
-      ...uniforms,
-      uGrassAlbedo: {
-        value: grassColor,
-      },
-    });
-  }, [grassColor, normalMap]);
 
   useEffect(() => {
     if (planeRef.current) {
@@ -97,11 +71,23 @@ function Terrain() {
   });
 
   function handlePointerUp() {
-    setIsSculpting(false);
+    store.setState({
+      isSculpting: false,
+      isTexturePainting: false,
+    });
   }
 
   function handlePointerDown() {
-    setIsSculpting(true);
+    store.setState({
+      isSculpting: true,
+      isTexturePainting: true,
+    });
+  }
+
+  function hanldePointerMove(mousePosition: ThreeEvent<PointerEvent>) {
+    if (isSculpting || isTexturePainting) {
+      store.setState({ mousePosition });
+    }
   }
 
   return (
@@ -111,7 +97,7 @@ function Terrain() {
         rotation={[MathUtils.DEG2RAD * -90, 0, 0]}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
-        onPointerMove={setMousePosition}
+        onPointerMove={hanldePointerMove}
         visible={false}
       >
         <planeGeometry args={[8, 8, 64, 64]} />
@@ -127,15 +113,10 @@ function Terrain() {
           baseMaterial={MeshPhysicalMaterial}
           vertexShader={groundShader.vertexShader}
           fragmentShader={groundShader.fragmentShader}
-          // map={grassColor}
-          // normalMap={normalMap}
-          // normalScale={new Vector2(0.3, 0.3)}
-          // roughness={0}
-          // metalness={0}
+          map={terrainAlbedo || undefined}
           silent
           uniforms={uniforms}
-          color={0x555555}
-          // wireframe={true}
+          wireframe={showWireframe}
         />
       </mesh>
     </>

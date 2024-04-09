@@ -5,26 +5,15 @@ import {
   Popover,
   PopoverArrow,
   PopoverBody,
-  PopoverCloseButton,
   PopoverContent,
-  PopoverHeader,
   PopoverTrigger,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import store from "../../store";
 
 function TextureSelection() {
-  const [texture, setTexture] = useState<string | null>(null);
-  const [textures, setTextures] = useState([]);
-
-  useEffect(() => {
-    fetch("./textures.json")
-      .then((r) => r.json())
-      .then((files) =>
-        setTextures(
-          files.filter((name: string) => name.toLowerCase().includes("color"))
-        )
-      );
-  }, []);
+  const { textures } = store();
+  const [textureName, setTextureName] = useState<string | null>(null);
 
   return (
     <Popover placement="right">
@@ -33,17 +22,19 @@ function TextureSelection() {
           <PopoverTrigger>
             <Button
               height="100px"
-              {...(texture
-                ? { backgroundImage: `url('/textures/${texture}')` }
+              {...(textureName
+                ? { backgroundImage: `url('/textures/${textureName}')` }
                 : {})}
               _hover={{
-                background: texture ? `url('/textures/${texture}')` : "",
+                background: textureName
+                  ? `url('/textures/${textureName}')`
+                  : "",
                 backgroundSize: "cover",
                 opacity: 0.6,
               }}
               backgroundSize={"cover"}
             >
-              {!texture && <Text>{"Select a texture"}</Text>}
+              {!textureName && <Text>{"Select a texture"}</Text>}
             </Button>
           </PopoverTrigger>
           <PopoverContent width="160px">
@@ -63,7 +54,8 @@ function TextureSelection() {
                     backgroundSize="cover"
                     onClick={() => {
                       onClose();
-                      setTexture(texture);
+                      setTextureName(texture);
+                      store.setState({ activeTextureName: texture });
                     }}
                   />
                 ))}

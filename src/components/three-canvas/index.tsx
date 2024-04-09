@@ -3,11 +3,10 @@ import Terrain from "../terrain";
 import { CameraControls } from "@react-three/drei";
 import Camera from "../camera";
 import { Color } from "three";
-import { useContext } from "react";
-import { TerrainContext } from "../../context/terrain";
+import store from "../../store";
 
 function Canvas() {
-  const { isSculptMode } = useContext(TerrainContext);
+  const { isSculptMode, isTexturePaintMode } = store();
 
   return (
     <ThreeCanvas
@@ -16,7 +15,10 @@ function Canvas() {
       gl={{ localClippingEnabled: true }}
     >
       <Camera />
-      <CameraControls makeDefault enabled={!isSculptMode} />
+      <CameraControls
+        makeDefault
+        enabled={!isSculptMode && !isTexturePaintMode}
+      />
       <ambientLight intensity={0.1} />
       <directionalLight
         position={[1, 2, 1]}

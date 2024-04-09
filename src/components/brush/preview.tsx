@@ -25,7 +25,8 @@ function Preview({ size, fade, maxSize }: PreviewProps) {
     ctx.reset();
     ctx.beginPath();
     ctx.arc(45, 45, (radius / maxSize) * 80, 0, 2 * Math.PI);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+    ctx.lineWidth = 2;
     ctx.stroke();
     ctx.closePath();
 
@@ -50,6 +51,7 @@ function Preview({ size, fade, maxSize }: PreviewProps) {
     <Flex
       position="relative"
       border={"1px solid rgba(255, 255, 255, 0.04)"}
+      background="rgba(0, 0, 0, 0.1)"
       _before={{
         content: '" "',
         position: "absolute",
