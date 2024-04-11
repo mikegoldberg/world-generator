@@ -41,19 +41,19 @@ function Heightmap() {
       octaves: 4,
     });
 
-    // for (let x = 0; x < width; x++) {
-    //   for (let y = 0; y < height; y++) {
-    //     const i = (x + y * width) * 4;
-    //     const value = ((result[x][y] + 1) / 2) * 255;
+    for (let x = 0; x < width; x++) {
+      for (let y = 0; y < height; y++) {
+        const i = (x + y * width) * 4;
+        const value = ((result[x][y] + 1) / 2) * 255;
 
-    //     imageData.data[i] = value;
-    //     imageData.data[i + 1] = value;
-    //     imageData.data[i + 2] = value;
-    //     imageData.data[i + 3] = 255;
-    //   }
-    // }
+        imageData.data[i] = value;
+        imageData.data[i + 1] = value;
+        imageData.data[i + 2] = value;
+        imageData.data[i + 3] = 255;
+      }
+    }
 
-    // StackBlur.imageDataRGBA(imageData, 0, 0, width, height, blur);
+    StackBlur.imageDataRGBA(imageData, 0, 0, width, height, blur);
     ctx.putImageData(imageData, 0, 0);
 
     store.setState({
