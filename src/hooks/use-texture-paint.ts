@@ -4,18 +4,19 @@ import { CanvasTexture, TextureLoader } from "three";
 import { useConst } from "@chakra-ui/react";
 
 function useTexturePaint() {
+  const defaultColor = useConst("#002288");
   const { activeTextureName, mousePosition, isTexturePainting } = store();
   const textureSize = useConst({ x: 1024, y: 1024 });
   const terrainTexture = useRef(document.createElement("canvas"));
   const bufferedTerrainTexture = useRef(document.createElement("canvas"));
   const brush = useRef(document.createElement("canvas"));
   const [sourceTexture, setSourceTexture] = useState<any>(null);
-  const [brushSize, setBrushSize] = useState(80);
+  const [brushSize, setBrushSize] = useState(180);
   const [brushFade, setBrushFade] = useState(0);
 
   useEffect(() => {
     if (isTexturePainting) {
-      setBrushTexture(40, 40);
+      setBrushTexture();
       drawTexture();
     }
   }, [isTexturePainting, mousePosition]);
@@ -24,30 +25,80 @@ function useTexturePaint() {
     terrainTexture.current.width = textureSize.x;
     terrainTexture.current.height = textureSize.y;
 
+    const ctx = terrainTexture.current.getContext("2d");
+
+    if (!ctx) {
+      return;
+    }
+
+    ctx.fillStyle = defaultColor;
+    ctx.fillRect(0, 0, textureSize.x, textureSize.y);
+
     store.setState({
       terrainAlbedo: new CanvasTexture(terrainTexture.current),
     });
   }, []);
 
   useEffect(() => {
+    //   // display passes for debugging
+    //   if (!terrainTexture.current || !sourceTexture) {
+    //     return;
+    //   }
+
+    //   const sourceTextureImage = sourceTexture.source.data;
+    //   sourceTextureImage.style.position = "fixed";
+    //   sourceTextureImage.style.top = "10px";
+    //   sourceTextureImage.style.left = "250px";
+    //   sourceTextureImage.style.width = "150px";
+    //   document.body.appendChild(sourceTextureImage);
+
+    //   bufferedTerrainTexture.current.style.position = "fixed";
+    //   bufferedTerrainTexture.current.style.top = "170px";
+    //   bufferedTerrainTexture.current.style.left = "250px";
+    //   bufferedTerrainTexture.current.style.width = "150px";
+    //   document.body.appendChild(bufferedTerrainTexture.current);
+
+    //   terrainTexture.current.style.position = "fixed";
+    //   terrainTexture.current.style.top = "330px";
+    //   terrainTexture.current.style.left = "250px";
+    //   terrainTexture.current.style.width = "150px";
+    //   terrainTexture.current.style.height = "150px";
+    //   document.body.appendChild(terrainTexture.current);
+
+    brush.current.style.position = "fixed";
+    brush.current.style.top = "330px";
+    brush.current.style.left = "250px";
+    brush.current.style.height = "150px";
+    brush.current.style.width = "150px";
+    document.body.appendChild(brush.current);
+  }, [brush.current, terrainTexture.current, sourceTexture]);
+
+  useEffect(() => {
     const ctx = bufferedTerrainTexture.current.getContext("2d");
 
     if (sourceTexture && ctx) {
       const src = sourceTexture.source.data;
-      const padding = brushSize / 2;
+      const srcW = textureSize.x;
+      const srcH = textureSize.y;
+      const pad = brushSize / 2;
 
-      bufferedTerrainTexture.current.width = src.width + brushSize;
-      bufferedTerrainTexture.current.height = src.height + brushSize;
+      bufferedTerrainTexture.current.width = srcW + brushSize;
+      bufferedTerrainTexture.current.height = srcH + brushSize;
 
-      ctx.drawImage(src, src.width * -1 + padding, src.height * -1 + padding);
-      ctx.drawImage(src, padding, src.height * -1 + padding);
-      ctx.drawImage(src, src.width + padding, src.height * -1 + padding);
-      ctx.drawImage(src, src.width * -1 + padding, padding);
-      ctx.drawImage(src, padding, padding);
-      ctx.drawImage(src, src.width + padding, padding);
-      ctx.drawImage(src, src.width * -1 + padding, src.height + padding);
-      ctx.drawImage(src, padding, src.height + padding);
-      ctx.drawImage(src, src.width + padding, src.height + padding);
+      const segments = {
+        topLeft: [srcW * -1 + pad, srcH * -1 + pad],
+        top: [pad, srcH * -1 + pad],
+        topRight: [srcW + pad, srcH * -1 + pad],
+        left: [srcW * -1 + pad, pad],
+        center: [pad, pad],
+        right: [srcW + pad, pad],
+        bottomLeft: [srcW * -1 + pad, srcH + pad],
+        bottom: [pad, srcH + pad],
+        bottomRight: [srcW + pad, srcH + pad],
+      };
+      Object.values(segments).forEach(([x, y]: number[]) => {
+        ctx.drawImage(src, x, y);
+      });
     }
   }, [brushSize, sourceTexture, bufferedTerrainTexture]);
 
@@ -74,7 +125,7 @@ function useTexturePaint() {
 
   const resetBrush = useCallback(() => {
     const ctx = brush.current.getContext("2d");
-    const padding = brushSize / 2;
+    const radius = brushSize / 2;
 
     if (!ctx) {
       return;
@@ -83,42 +134,52 @@ function useTexturePaint() {
     ctx.reset();
     ctx.beginPath();
     const radialGradient = ctx.createRadialGradient(
-      padding,
-      padding,
+      radius,
+      radius,
       0,
-      padding,
-      padding,
-      padding
+      radius,
+      radius,
+      radius
     );
-    radialGradient.addColorStop(0, "rgba(0, 0, 0, .2)"); // alpha sets opacity of brush
+    radialGradient.addColorStop(0, "rgba(0, 0, 0, 1)"); // alpha sets opacity of brush
     radialGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
     ctx.fillStyle = radialGradient;
-    ctx.arc(padding, padding, padding, Math.PI * 2, 0);
+    ctx.arc(radius, radius, radius, Math.PI * 2, 0);
     ctx.fill();
     ctx.globalCompositeOperation = "source-in";
   }, [brushSize, brush.current]);
 
-  const setBrushTexture = useCallback(
-    (x: number, y: number) => {
-      resetBrush();
-      const ctx = brush.current.getContext("2d");
+  const setBrushTexture = useCallback(() => {
+    resetBrush();
 
-      ctx?.drawImage(
-        bufferedTerrainTexture.current,
-        ((x % 200) + 40) * -1,
-        ((y % 200) + 40) * -1
-      );
-    },
-    [brush.current, bufferedTerrainTexture.current]
-  );
+    if (!mousePosition) {
+      return;
+    }
+
+    const { uv } = mousePosition;
+    const x = textureSize.x * uv.x - brushSize / 2;
+    const y = textureSize.y * (1 - uv.y) - brushSize / 2;
+    const ctx = brush.current.getContext("2d");
+
+    ctx?.drawImage(
+      bufferedTerrainTexture.current,
+      ((x % 200) + brushSize / 2) * -1,
+      ((y % 200) + brushSize / 2) * -1
+    );
+  }, [brushSize, brush.current, bufferedTerrainTexture.current, mousePosition]);
 
   function drawTexture() {
-    // const x = e.offsetX;
-    // const y = e.offsetY;
-
+    if (!mousePosition) {
+      return;
+    }
+    const { uv } = mousePosition;
     const ctx = terrainTexture.current.getContext("2d");
-    ctx?.drawImage(brush.current, 100, 100);
 
+    ctx?.drawImage(
+      brush.current,
+      textureSize.x * uv.x - brushSize / 2,
+      textureSize.y * (1 - uv.y) - brushSize / 2
+    );
     store.setState({
       terrainAlbedo: new CanvasTexture(terrainTexture.current),
     });

@@ -1,22 +1,14 @@
 import { Box, Flex, useConst } from "@chakra-ui/react";
-import { Texture } from "three";
 import SliderControl from "../controls/slider";
 import { useEffect, useRef, useState } from "react";
 import Preview from "./preview";
 
 interface BrushProps {
-  canvas: null | HTMLCanvasElement;
-  textures?: null | Texture[];
   onSizeUpdate: Function;
   onFadeUpdate: Function;
 }
 
-function Brush({
-  canvas,
-  textures = null,
-  onSizeUpdate,
-  onFadeUpdate,
-}: BrushProps) {
+function Brush({ onSizeUpdate, onFadeUpdate }: BrushProps) {
   const [size, setSize] = useState(80);
   const [fade, setFade] = useState(0.5);
   const maxSize = useConst(200);
@@ -34,10 +26,6 @@ function Brush({
   useEffect(() => {
     resetBrush();
   }, [brush, size]);
-
-  useEffect(() => {
-    console.log(canvas, textures);
-  }, []);
 
   function resetBrush() {
     const ctx = brush.current?.getContext("2d");

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MathUtils, MeshPhysicalMaterial, Vector2 } from "three";
 import CustomShaderMaterial from "three-custom-shader-material";
 import groundShader from "../../shaders/ground";
@@ -11,6 +11,7 @@ function Terrain() {
     displacementScale,
     modificationLayer,
     isSculptMode,
+    isTexturePaintMode,
     mousePosition,
     showWireframe,
     terrainAlbedo,
@@ -79,8 +80,8 @@ function Terrain() {
 
   function handlePointerDown() {
     store.setState({
-      isSculpting: true,
-      isTexturePainting: true,
+      isSculpting: isSculptMode,
+      isTexturePainting: isTexturePaintMode,
     });
   }
 
@@ -92,7 +93,7 @@ function Terrain() {
 
   return (
     <>
-      <mesh
+      {/* <mesh
         position={[0, displacementScale / 2, 0]}
         rotation={[MathUtils.DEG2RAD * -90, 0, 0]}
         onPointerDown={handlePointerDown}
@@ -101,8 +102,11 @@ function Terrain() {
         visible={false}
       >
         <planeGeometry args={[8, 8, 64, 64]} />
-      </mesh>
+      </mesh> */}
       <mesh
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerMove={hanldePointerMove}
         position={[0, 0, 0]}
         rotation={[MathUtils.DEG2RAD * -90, 0, 0]}
         receiveShadow={true}
