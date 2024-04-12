@@ -13,6 +13,8 @@ interface StoreState {
   textures: any;
   activeTextureName: any;
   terrainAlbedo: any;
+  activeBrushSize: number;
+  activeBrushFade: number;
 }
 
 const store = create<StoreState>(() => ({
@@ -28,6 +30,8 @@ const store = create<StoreState>(() => ({
   textures: [],
   activeTextureName: null,
   terrainAlbedo: null,
+  activeBrushSize: 80,
+  activeBrushFade: 0.5,
 }));
 
 export default store;

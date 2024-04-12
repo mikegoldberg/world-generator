@@ -1,8 +1,8 @@
 import { IconButton } from "@chakra-ui/react";
 import { SiTraefikmesh } from "react-icons/si";
-import store from "../../store";
+import store from "../../../store";
 
-function ShowWireframe() {
+function ShowWireframeButton() {
   const { showWireframe } = store();
 
   function handleClick() {
@@ -25,4 +25,4 @@ function ShowWireframe() {
   );
 }
 
-export default ShowWireframe;
+export default ShowWireframeButton;

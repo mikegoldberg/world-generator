@@ -25,19 +25,15 @@ function LeftPanel() {
         <PanelItem label={"Base Terrain"}>
           <BaseTerrain />
         </PanelItem>
-
         <PanelItem label={"Sculpt"}>
           <Sculpt />
         </PanelItem>
-
         <PanelItem label={"Paint"}>
           <Paint />
         </PanelItem>
-
         <PanelItem label={"Water"}>
           <Water />
         </PanelItem>
-
         <PanelItem label={"Weather"}>
           <Weather />
         </PanelItem>

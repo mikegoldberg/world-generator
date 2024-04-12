@@ -6,7 +6,7 @@ import { useConst } from "@chakra-ui/react";
 function useTexturePaint() {
   const defaultColor = useConst("#11aa33");
   const { activeTextureName, mousePosition, isTexturePainting } = store();
-  const textureSize = useConst({ x: 1024, y: 1024 });
+  const [textureSize, setTextureSize] = useState({ x: 1024, y: 1024 });
   const terrainTexture = useRef(document.createElement("canvas"));
   const bufferedTerrainTexture = useRef(document.createElement("canvas"));
   const brush = useRef(document.createElement("canvas"));
@@ -35,7 +35,7 @@ function useTexturePaint() {
     ctx.fillRect(0, 0, textureSize.x, textureSize.y);
 
     store.setState({
-      terrainAlbedo: new CanvasTexture(terrainTexture.current),
+      terrainAlbedo: terrainTexture.current,
     });
   }, []);
 
@@ -66,7 +66,7 @@ function useTexturePaint() {
   //   document.body.appendChild(terrainTexture.current);
 
   //   brush.current.style.position = "fixed";
-  //   brush.current.style.top = "330px";
+  //   brush.current.style.top = "490px";
   //   brush.current.style.left = "250px";
   //   brush.current.style.height = "150px";
   //   brush.current.style.width = "150px";
@@ -96,6 +96,7 @@ function useTexturePaint() {
         bottom: [pad, srcH + pad],
         bottomRight: [srcW + pad, srcH + pad],
       };
+
       Object.values(segments).forEach(([x, y]: number[]) => {
         ctx.drawImage(src, x, y);
       });
@@ -166,8 +167,8 @@ function useTexturePaint() {
 
     ctx?.drawImage(
       bufferedTerrainTexture.current,
-      ((x % 200) + brushSize / 2) * -1,
-      ((y % 200) + brushSize / 2) * -1
+      ((x % bufferedTerrainTexture.current.width) + brushSize / 2) * -1,
+      ((y % bufferedTerrainTexture.current.height) + brushSize / 2) * -1
     );
   }, [brushSize, brush.current, bufferedTerrainTexture.current, mousePosition]);
 
@@ -184,7 +185,7 @@ function useTexturePaint() {
       textureSize.y * (1 - uv.y) - brushSize / 2
     );
     store.setState({
-      terrainAlbedo: new CanvasTexture(terrainTexture.current),
+      terrainAlbedo: terrainTexture.current,
     });
   }
 

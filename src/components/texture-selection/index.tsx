@@ -22,15 +22,21 @@ function TextureSelection() {
           <PopoverTrigger>
             <Button
               height="100px"
+              backgroundPosition={"center"}
               {...(textureName
                 ? { backgroundImage: `url('/textures/${textureName}')` }
                 : {})}
               _hover={{
-                background: textureName
+                backgroundImage: textureName
                   ? `url('/textures/${textureName}')`
                   : "",
-                backgroundSize: "cover",
                 opacity: 0.6,
+              }}
+              _active={{
+                backgroundImage: textureName
+                  ? `url('/textures/${textureName}')`
+                  : "",
+                opacity: 0.2,
               }}
               backgroundSize={"cover"}
             >
@@ -44,10 +50,16 @@ function TextureSelection() {
                 {textures.map((texture: string) => (
                   <Button
                     height="80px"
+                    backgroundPosition={"center"}
                     _hover={{
-                      background: `url('/textures/${texture}')`,
-                      backgroundSize: "cover",
+                      backgroundImage: `url('/textures/${texture}')`,
                       opacity: 0.6,
+                    }}
+                    _active={{
+                      backgroundImage: textureName
+                        ? `url('/textures/${textureName}')`
+                        : "",
+                      opacity: 0.2,
                     }}
                     key={texture}
                     backgroundImage={`url('/textures/${texture}')`}
@@ -55,7 +67,11 @@ function TextureSelection() {
                     onClick={() => {
                       onClose();
                       setTextureName(texture);
-                      store.setState({ activeTextureName: texture });
+                      store.setState({
+                        activeTextureName: texture,
+                        isSculptMode: false,
+                        isTexturePaintMode: true,
+                      });
                     }}
                   />
                 ))}

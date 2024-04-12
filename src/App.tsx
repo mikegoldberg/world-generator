@@ -1,6 +1,6 @@
 import { Flex } from "@chakra-ui/react";
-import Stage from "./layouts/stage";
 import LeftPanel from "./layouts/left-panel";
+import Stage from "./components/stage";
 
 function App() {
   return (

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MathUtils, MeshPhysicalMaterial, Vector2 } from "three";
+import { CanvasTexture, MathUtils, MeshPhysicalMaterial, Vector2 } from "three";
 import CustomShaderMaterial from "three-custom-shader-material";
 import groundShader from "../../shaders/ground";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
@@ -15,8 +15,8 @@ function Terrain() {
     mousePosition,
     showWireframe,
     terrainAlbedo,
-    isSculpting,
-    isTexturePainting,
+    activeBrushFade,
+    activeBrushSize,
   } = store();
   const planeRef = useRef<any>();
   const shaderRef = useRef<any>();
@@ -25,16 +25,36 @@ function Terrain() {
     uResolution: { value: new Vector2(window.innerWidth, window.innerHeight) },
     uBrushEnabled: { value: false },
     uGrassAlbedo: { value: null },
+    uBrushSize: { value: 80 },
+    uBrushFade: { value: 0.5 },
   });
 
   useEffect(() => {
     setUniforms({
       ...uniforms,
       uBrushEnabled: {
-        value: isSculptMode,
+        value: isSculptMode || isTexturePaintMode,
       },
     });
-  }, [isSculptMode]);
+  }, [isSculptMode, isTexturePaintMode]);
+
+  useEffect(() => {
+    setUniforms({
+      ...uniforms,
+      uBrushFade: {
+        value: activeBrushFade,
+      },
+    });
+  }, [activeBrushFade]);
+
+  useEffect(() => {
+    setUniforms({
+      ...uniforms,
+      uBrushSize: {
+        value: activeBrushSize,
+      },
+    });
+  }, [activeBrushSize]);
 
   useEffect(() => {
     if (planeRef.current) {
@@ -86,7 +106,7 @@ function Terrain() {
   }
 
   function hanldePointerMove(mousePosition: ThreeEvent<PointerEvent>) {
-    if (isSculpting || isTexturePainting) {
+    if (isSculptMode || isTexturePaintMode) {
       store.setState({ mousePosition });
     }
   }
@@ -117,7 +137,7 @@ function Terrain() {
           baseMaterial={MeshPhysicalMaterial}
           vertexShader={groundShader.vertexShader}
           fragmentShader={groundShader.fragmentShader}
-          map={terrainAlbedo || undefined}
+          map={terrainAlbedo ? new CanvasTexture(terrainAlbedo) : undefined}
           silent
           uniforms={uniforms}
           wireframe={showWireframe}

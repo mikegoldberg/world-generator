@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
-import ThreeCanvas from "../components/three-canvas";
 import TopPanel from "./top-panel";
+import ThreeCanvas from "../three-canvas";
 
 function Stage() {
   return (

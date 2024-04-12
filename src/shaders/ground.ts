@@ -3,7 +3,7 @@ varying vec2 vUv;
 varying vec2 vPosition;
 
 void main() {
-    vUv = uv * 2.;
+    vUv = uv * 2.0;
     vPosition = position.xy;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }
@@ -13,6 +13,8 @@ const fragmentShader = `
 uniform vec2 uMouse;
 uniform vec2 uResolution;
 uniform bool uBrushEnabled;
+uniform float uBrushSize;
+uniform float uBrushFade;
 uniform sampler2D uGrassAlbedo;
 
 varying vec2 vUv;
@@ -28,7 +30,9 @@ void main() {
     if (dist < 1.0 && uBrushEnabled) {
         if (dist > .9) {
             csm_Emissive = vec3(.2, .2, .2);
-        } else {
+        } 
+        
+        if (dist < .9 && dist < uBrushFade)
             csm_Emissive = vec3(.05, .05, .05);
         }
     }
