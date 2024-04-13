@@ -1,11 +1,11 @@
 import { Accordion, Box } from "@chakra-ui/react";
 import Weather from "./panel-item/weather";
 import Water from "./panel-item/water";
-import Paint from "./panel-item/paint";
-import Sculpt from "./panel-item/sculpt";
 import PanelItem from "./panel-item";
 import BaseTerrain from "./panel-item/base-terrain";
 import usePreferences from "../hooks/use-preferences";
+import TexturePaint from "../components/texture-paint";
+import Sculpt from "../components/sculpt";
 
 function LeftPanel() {
   const preferences = usePreferences();
@@ -29,7 +29,7 @@ function LeftPanel() {
           <Sculpt />
         </PanelItem>
         <PanelItem label={"Paint"}>
-          <Paint />
+          <TexturePaint />
         </PanelItem>
         <PanelItem label={"Water"}>
           <Water />

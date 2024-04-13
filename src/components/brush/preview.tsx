@@ -45,7 +45,7 @@ function Preview({ size, fade, maxSize }: PreviewProps) {
     ctx.fillStyle = rad;
     ctx.fill();
     ctx.closePath();
-  }, [size, radius, fade, maxSize]);
+  }, [size, radius, fade, maxSize, canvasRef.current]);
 
   return (
     <Flex

@@ -1,57 +1,55 @@
-import { Box, Flex, useConst } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import SliderControl from "../controls/slider";
-import { useEffect, useRef, useState } from "react";
 import Preview from "./preview";
 
 interface BrushProps {
-  onSizeUpdate: Function;
-  onFadeUpdate: Function;
+  onSizeChanged: (value: number) => void;
+  onFadeChanged: (value: number) => void;
+  size: number;
+  fade: number;
+  maxSize: number;
+  maxFade: number;
 }
 
-function Brush({ onSizeUpdate, onFadeUpdate }: BrushProps) {
-  const [size, setSize] = useState(80);
-  const [fade, setFade] = useState(0.5);
-  const maxSize = useConst(200);
-  const maxFade = useConst(1.0);
-  const brush = useRef<HTMLCanvasElement | null>(null);
+function Brush({
+  size = 80,
+  fade = 0.5,
+  maxSize = 200,
+  maxFade = 0.5,
+  onSizeChanged,
+  onFadeChanged,
+}: BrushProps) {
+  // const brush = useRef<HTMLCanvasElement | null>(null);
 
-  useEffect(() => {
-    onSizeUpdate(size);
-  }, [size]);
+  // useEffect(() => {
+  //   resetBrush();
+  // }, [brush, size]);
 
-  useEffect(() => {
-    onFadeUpdate(fade);
-  }, [fade]);
+  // function resetBrush() {
+  //   const ctx = brush.current?.getContext("2d");
 
-  useEffect(() => {
-    resetBrush();
-  }, [brush, size]);
+  //   if (!ctx) {
+  //     return;
+  //   }
 
-  function resetBrush() {
-    const ctx = brush.current?.getContext("2d");
-
-    if (!ctx) {
-      return;
-    }
-
-    ctx.reset();
-    ctx.beginPath();
-    const radius = size / 2;
-    const radialGradient = ctx.createRadialGradient(
-      radius,
-      radius,
-      0,
-      radius,
-      radius,
-      radius
-    );
-    radialGradient.addColorStop(0, "rgba(255, 155, 0, 1)");
-    radialGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
-    ctx.fillStyle = radialGradient;
-    ctx.arc(radius, radius, radius, Math.PI * 2, 0);
-    ctx.fill();
-    ctx.globalCompositeOperation = "source-in";
-  }
+  //   ctx.reset();
+  //   ctx.beginPath();
+  //   const radius = size / 2;
+  //   const radialGradient = ctx.createRadialGradient(
+  //     radius,
+  //     radius,
+  //     0,
+  //     radius,
+  //     radius,
+  //     radius
+  //   );
+  //   radialGradient.addColorStop(0, "rgba(255, 155, 0, 1)");
+  //   radialGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+  //   ctx.fillStyle = radialGradient;
+  //   ctx.arc(radius, radius, radius, Math.PI * 2, 0);
+  //   ctx.fill();
+  //   ctx.globalCompositeOperation = "source-in";
+  // }
 
   return (
     <Box
@@ -67,18 +65,18 @@ function Brush({ onSizeUpdate, onFadeUpdate }: BrushProps) {
             max={maxSize}
             min={40}
             step={1}
-            defaultValue={size}
+            value={size}
             orientation="vertical"
-            onChange={setSize}
+            onChange={onSizeChanged}
           />
           <SliderControl
             label="Fade"
             max={maxFade}
             min={0}
             step={0.05}
-            defaultValue={fade}
+            value={fade}
             orientation="vertical"
-            onChange={setFade}
+            onChange={onFadeChanged}
           />
         </Flex>
       </Flex>

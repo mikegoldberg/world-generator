@@ -21,6 +21,9 @@ function TexturePaintButton() {
         isTexturePaintMode ? "#fff" : "rgba(255, 255, 255, 0.5)"
       }`}
       background="#000"
+      fontSize="28px"
+      height="44px"
+      width="44px"
       _hover={{ background: "none" }}
       color={isTexturePaintMode ? "#fff" : "rgba(255, 255, 255, 0.5)"}
       onClick={handleClickPaintMode}

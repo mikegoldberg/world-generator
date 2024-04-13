@@ -5,7 +5,12 @@ import { useConst } from "@chakra-ui/react";
 
 function useTexturePaint() {
   const defaultColor = useConst("#11aa33");
-  const { activeTextureName, mousePosition, isTexturePainting } = store();
+  const {
+    activeTextureName,
+    mousePosition,
+    isTexturePainting,
+    isTexturePaintMode,
+  } = store();
   const [textureSize, setTextureSize] = useState({ x: 1024, y: 1024 });
   const terrainTexture = useRef(document.createElement("canvas"));
   const bufferedTerrainTexture = useRef(document.createElement("canvas"));
@@ -13,6 +18,7 @@ function useTexturePaint() {
   const [sourceTexture, setSourceTexture] = useState<any>(null);
   const [brushSize, setBrushSize] = useState(180);
   const [brushFade, setBrushFade] = useState(0);
+  const [isDebugTextures, setIsDebugTextures] = useState(false);
 
   useEffect(() => {
     if (isTexturePainting) {
@@ -20,6 +26,12 @@ function useTexturePaint() {
       drawTexture();
     }
   }, [isTexturePainting, mousePosition]);
+
+  useEffect(() => {
+    if (isTexturePaintMode) {
+      setBrushTexture();
+    }
+  }, [brushSize, brushFade]);
 
   useEffect(() => {
     terrainTexture.current.width = textureSize.x;
@@ -39,39 +51,39 @@ function useTexturePaint() {
     });
   }, []);
 
-  // useEffect(() => {
-  //   // display passes for debugging
-  //   if (!terrainTexture.current || !sourceTexture) {
-  //     return;
-  //   }
+  useEffect(() => {
+    // display passes for debugging
+    if (!terrainTexture.current || !sourceTexture || !isDebugTextures) {
+      return;
+    }
 
-  //   const sourceTextureImage = sourceTexture.source.data;
-  //   sourceTextureImage.style.position = "fixed";
-  //   sourceTextureImage.style.top = "10px";
-  //   sourceTextureImage.style.left = "250px";
-  //   sourceTextureImage.style.width = "150px";
-  //   document.body.appendChild(sourceTextureImage);
+    const sourceTextureImage = sourceTexture.source.data;
+    sourceTextureImage.style.position = "fixed";
+    sourceTextureImage.style.top = "10px";
+    sourceTextureImage.style.left = "250px";
+    sourceTextureImage.style.width = "150px";
+    document.body.appendChild(sourceTextureImage);
 
-  //   bufferedTerrainTexture.current.style.position = "fixed";
-  //   bufferedTerrainTexture.current.style.top = "170px";
-  //   bufferedTerrainTexture.current.style.left = "250px";
-  //   bufferedTerrainTexture.current.style.width = "150px";
-  //   document.body.appendChild(bufferedTerrainTexture.current);
+    bufferedTerrainTexture.current.style.position = "fixed";
+    bufferedTerrainTexture.current.style.top = "170px";
+    bufferedTerrainTexture.current.style.left = "250px";
+    bufferedTerrainTexture.current.style.width = "150px";
+    document.body.appendChild(bufferedTerrainTexture.current);
 
-  //   terrainTexture.current.style.position = "fixed";
-  //   terrainTexture.current.style.top = "330px";
-  //   terrainTexture.current.style.left = "250px";
-  //   terrainTexture.current.style.width = "150px";
-  //   terrainTexture.current.style.height = "150px";
-  //   document.body.appendChild(terrainTexture.current);
+    terrainTexture.current.style.position = "fixed";
+    terrainTexture.current.style.top = "330px";
+    terrainTexture.current.style.left = "250px";
+    terrainTexture.current.style.width = "150px";
+    terrainTexture.current.style.height = "150px";
+    document.body.appendChild(terrainTexture.current);
 
-  //   brush.current.style.position = "fixed";
-  //   brush.current.style.top = "490px";
-  //   brush.current.style.left = "250px";
-  //   brush.current.style.height = "150px";
-  //   brush.current.style.width = "150px";
-  //   document.body.appendChild(brush.current);
-  // }, [brush.current, terrainTexture.current, sourceTexture]);
+    brush.current.style.position = "fixed";
+    brush.current.style.top = "490px";
+    brush.current.style.left = "250px";
+    brush.current.style.height = "150px";
+    brush.current.style.width = "150px";
+    document.body.appendChild(brush.current);
+  }, [brush.current, terrainTexture.current, sourceTexture]);
 
   useEffect(() => {
     const ctx = bufferedTerrainTexture.current.getContext("2d");
@@ -146,12 +158,13 @@ function useTexturePaint() {
       radius
     );
     radialGradient.addColorStop(0, "rgba(0, 0, 0, 1)"); // alpha sets opacity of brush
+    radialGradient.addColorStop(1.0 - brushFade, "rgba(0, 0, 0, 1)");
     radialGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
     ctx.fillStyle = radialGradient;
     ctx.arc(radius, radius, radius, Math.PI * 2, 0);
     ctx.fill();
     ctx.globalCompositeOperation = "source-in";
-  }, [brushSize, brush.current]);
+  }, [brushSize, brushFade, brush.current]);
 
   const setBrushTexture = useCallback(() => {
     resetBrush();

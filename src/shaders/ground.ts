@@ -27,12 +27,12 @@ void main() {
     vec3 baseColor = vec3(0, 1.0, 0);
     float dist = sqrt(x * x + y * y);
     
-    if (dist < 1.0 && uBrushEnabled) {
-        if (dist > .9) {
+    if (dist < uBrushSize / 200.0 && uBrushEnabled) {
+        if (dist > (uBrushSize - 10.0) / 200.0) {
             csm_Emissive = vec3(.2, .2, .2);
         } 
         
-        if (dist < .9 && dist < uBrushFade)
+        if (dist < (uBrushSize - 10.0) / 200.0 && dist < uBrushFade)
             csm_Emissive = vec3(.05, .05, .05);
         }
     }

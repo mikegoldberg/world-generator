@@ -9,7 +9,7 @@ import {
 
 interface SliderControlProps {
   label: string;
-  defaultValue: number;
+  value: number;
   max: number;
   min: number;
   step: number;
@@ -21,7 +21,7 @@ function SliderControl({
   max,
   min,
   step,
-  defaultValue,
+  value,
   orientation = "horizontal",
   onChange,
 }: SliderControlProps) {
@@ -36,7 +36,7 @@ function SliderControl({
       </FormLabel>
       <Slider
         aria-label={label}
-        defaultValue={defaultValue}
+        value={value}
         max={max}
         min={min}
         step={step}
