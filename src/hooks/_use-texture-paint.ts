@@ -1,21 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import store from "../store";
 import { CanvasTexture, TextureLoader } from "three";
 import { useConst } from "@chakra-ui/react";
+import TextureContext from "../components/texture-paint/texture-context";
 
 function useTexturePaint() {
+  const { sourceTexture } = useContext(TextureContext);
   const defaultColor = useConst("#11aa33");
-  const {
-    activeTextureName,
-    mousePosition,
-    isTexturePainting,
-    isTexturePaintMode,
-  } = store();
-  const [textureSize, setTextureSize] = useState({ x: 1024, y: 1024 });
+  const { mousePosition, isTexturePainting, isTexturePaintMode } = store();
+  // const [textureSize, setTextureSize] = useState({ x: 1024, y: 1024 });
   const terrainTexture = useRef(document.createElement("canvas"));
-  const bufferedTerrainTexture = useRef(document.createElement("canvas"));
   const brush = useRef(document.createElement("canvas"));
-  const [sourceTexture, setSourceTexture] = useState<any>(null);
   const [brushSize, setBrushSize] = useState(180);
   const [brushFade, setBrushFade] = useState(0);
   const [isDebugTextures, setIsDebugTextures] = useState(false);
@@ -51,6 +46,7 @@ function useTexturePaint() {
     });
   }, []);
 
+  /*
   useEffect(() => {
     // display passes for debugging
     if (!terrainTexture.current || !sourceTexture || !isDebugTextures) {
@@ -84,57 +80,7 @@ function useTexturePaint() {
     brush.current.style.width = "150px";
     document.body.appendChild(brush.current);
   }, [brush.current, terrainTexture.current, sourceTexture]);
-
-  useEffect(() => {
-    const ctx = bufferedTerrainTexture.current.getContext("2d");
-
-    if (sourceTexture && ctx) {
-      const src = sourceTexture.source.data;
-      const srcW = textureSize.x;
-      const srcH = textureSize.y;
-      const pad = brushSize / 2;
-
-      bufferedTerrainTexture.current.width = srcW + brushSize;
-      bufferedTerrainTexture.current.height = srcH + brushSize;
-
-      const segments = {
-        topLeft: [srcW * -1 + pad, srcH * -1 + pad],
-        top: [pad, srcH * -1 + pad],
-        topRight: [srcW + pad, srcH * -1 + pad],
-        left: [srcW * -1 + pad, pad],
-        center: [pad, pad],
-        right: [srcW + pad, pad],
-        bottomLeft: [srcW * -1 + pad, srcH + pad],
-        bottom: [pad, srcH + pad],
-        bottomRight: [srcW + pad, srcH + pad],
-      };
-
-      Object.values(segments).forEach(([x, y]: number[]) => {
-        ctx.drawImage(src, x, y);
-      });
-    }
-  }, [brushSize, sourceTexture, bufferedTerrainTexture]);
-
-  useEffect(() => {
-    if (activeTextureName) {
-      const loader = new TextureLoader();
-      loader.load(`./textures/${activeTextureName}`, setSourceTexture);
-    }
-  }, [activeTextureName]);
-
-  useEffect(() => {
-    fetch("./textures.json")
-      .then((r) => r.json())
-      .then((files) => {
-        const textures = files.filter((name: string) =>
-          name.toLowerCase().includes("color")
-        );
-
-        store.setState({
-          textures,
-        });
-      });
-  }, []);
+  */
 
   const resetBrush = useCallback(() => {
     const ctx = brush.current.getContext("2d");

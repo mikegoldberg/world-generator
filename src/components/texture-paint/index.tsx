@@ -1,52 +1,50 @@
-import { Flex, Grid, GridItem } from "@chakra-ui/react";
-import Brush from "../../components/brush";
-import TextureSelection from "../../components/texture-selection";
-import { useState } from "react";
-import useTexturePaint from "../../hooks/use-texture-paint";
+import { Flex, Portal } from "@chakra-ui/react";
+import SourceTexture from "./source-texture";
+import { Provider as TextureProvider } from "./texture-context";
+import OptionsPanel from "./options-panel";
+import { useEffect, useState } from "react";
 import store from "../../store";
+import SamplerTexture from "./sampler-texture";
+import BrushTexture from "./brush-texture";
+import OutputTexture from "./output-texture";
 
 function TexturePaint() {
-  const { isTexturePaintMode } = store();
-  const { setBrushSize, setBrushFade } = useTexturePaint();
-  const [size, setSize] = useState(100);
-  const [fade, setFade] = useState(0.5);
+  const [isDebugEnabled, setIsDebugEnabled] = useState(true);
 
-  function handleFadeChanged(fade: number) {
-    setFade(fade);
-    setBrushFade(fade);
+  useEffect(() => {
+    fetch("./textures.json")
+      .then((r) => r.json())
+      .then((files) => {
+        const textures = files.filter((name: string) =>
+          name.toLowerCase().includes("color")
+        );
 
-    if (isTexturePaintMode) {
-      store.setState({ activeBrushFade: fade });
-    }
-  }
-
-  function handleSizeChanged(size: number) {
-    setSize(size);
-    setBrushSize(size);
-
-    if (isTexturePaintMode) {
-      store.setState({ activeBrushSize: size });
-    }
-  }
+        store.setState({
+          textures,
+        });
+      });
+  }, []);
 
   return (
-    <>
-      <Flex flexDirection={"column"} gap="10px">
-        <Brush
-          size={size}
-          fade={fade}
-          onFadeChanged={handleFadeChanged}
-          onSizeChanged={handleSizeChanged}
-          maxFade={1}
-          maxSize={200}
-        />
-        <Grid templateColumns="repeat(4, 1fr)" gap={"3px"}>
-          <GridItem></GridItem>
-        </Grid>
-        <TextureSelection />
-      </Flex>
-      {/* debug items go here <Portal></Portal> */}
-    </>
+    <TextureProvider>
+      <OptionsPanel />
+      <Portal>
+        <Flex
+          display={isDebugEnabled ? "flex" : "none"}
+          position="fixed"
+          left="250px"
+          top="100px"
+          flexDirection="column"
+          width="150px"
+          gap="10px"
+        >
+          <SourceTexture />
+          <SamplerTexture />
+          <BrushTexture />
+          <OutputTexture />
+        </Flex>
+      </Portal>
+    </TextureProvider>
   );
 }
 
