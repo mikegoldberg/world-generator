@@ -1,33 +1,58 @@
-import { Flex, Portal } from "@chakra-ui/react";
-import SourceTexture from "./source-texture";
-import { Provider as TextureProvider } from "./texture-context";
-import OptionsPanel from "./options-panel";
-import { useEffect, useState } from "react";
-import store from "../../store";
-import SamplerTexture from "./sampler-texture";
-import BrushTexture from "./brush-texture";
-import OutputTexture from "./output-texture";
+import { Flex, Portal, useConst } from "@chakra-ui/react";
+import SourceTexture from "./textures/source";
+import Settings from "./settings";
+import { createContext, useState } from "react";
+import SamplerTexture from "./textures/sampler";
+import BrushTexture from "./textures/brush";
+import OutputTexture from "./textures/output";
+import useTextures from "../../hooks/use-textures";
+import Layers from "./layers";
+
+const TextureContext = createContext<null | any>(null);
+
+export { TextureContext };
 
 function TexturePaint() {
-  const [isDebugEnabled, setIsDebugEnabled] = useState(true);
-
-  useEffect(() => {
-    fetch("./textures.json")
-      .then((r) => r.json())
-      .then((files) => {
-        const textures = files.filter((name: string) =>
-          name.toLowerCase().includes("color")
-        );
-
-        store.setState({
-          textures,
-        });
-      });
-  }, []);
+  useTextures();
+  const [isDebugEnabled, setIsDebugEnabled] = useState(false);
+  const [sourceTexture, setSourceTexture] = useState(null);
+  const [samplerTexture, setSamplerTexture] = useState(null);
+  const [brushTexture, setBrushTexture] = useState(null);
+  const defaultColor = useConst("#11aa33");
+  const [brushSize, setBrushSize] = useState(100);
+  const [brushFade, setBrushFade] = useState(0.5);
+  const [textureSize, setTextureSize] = useState({ x: 1024, y: 1024 });
+  const [layers] = useState([
+    {
+      name: "layer",
+      options: {
+        albedo: true,
+        normal: true,
+        roughness: false,
+      },
+    },
+  ]);
 
   return (
-    <TextureProvider>
-      <OptionsPanel />
+    <TextureContext.Provider
+      value={{
+        brushSize,
+        setBrushSize,
+        brushFade,
+        setBrushFade,
+        textureSize,
+        setTextureSize,
+        defaultColor,
+        sourceTexture,
+        setSourceTexture,
+        samplerTexture,
+        setSamplerTexture,
+        brushTexture,
+        setBrushTexture,
+      }}
+    >
+      <Settings />
+      <Layers layers={layers} />
       <Portal>
         <Flex
           display={isDebugEnabled ? "flex" : "none"}
@@ -44,7 +69,7 @@ function TexturePaint() {
           <OutputTexture />
         </Flex>
       </Portal>
-    </TextureProvider>
+    </TextureContext.Provider>
   );
 }
 

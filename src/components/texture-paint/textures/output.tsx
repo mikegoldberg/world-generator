@@ -1,12 +1,12 @@
 import { useContext, useEffect, useRef } from "react";
-import store from "../../store";
-import TextureContext from "./texture-context";
+import store from "../../../store";
+import { TextureContext } from "../";
 
 function OutputTexture() {
-  const outputTextureRef = useRef<any>();
   const { isTexturePainting, mousePosition } = store();
-  const { textureSize, brushTextureRef, brushSize, defaultColor } =
+  const { textureSize, brushTexture, brushSize, defaultColor } =
     useContext(TextureContext);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     if (isTexturePainting && mousePosition) {
@@ -16,10 +16,14 @@ function OutputTexture() {
   }, [isTexturePainting, mousePosition]);
 
   useEffect(() => {
-    outputTextureRef.current.width = textureSize.x;
-    outputTextureRef.current.height = textureSize.y;
+    if (!canvasRef.current) {
+      return;
+    }
 
-    const ctx = outputTextureRef.current.getContext("2d");
+    canvasRef.current.width = textureSize.x;
+    canvasRef.current.height = textureSize.y;
+
+    const ctx = canvasRef.current.getContext("2d");
 
     if (!ctx) {
       return;
@@ -29,27 +33,28 @@ function OutputTexture() {
     ctx.fillRect(0, 0, textureSize.x, textureSize.y);
 
     store.setState({
-      terrainAlbedo: outputTextureRef.current,
+      terrainAlbedo: canvasRef.current,
     });
   }, []);
 
   function drawTexture() {
-    if (!mousePosition) {
+    const ctx = canvasRef.current?.getContext("2d");
+
+    if (!mousePosition || !ctx || !brushTexture) {
       return;
     }
     const { uv } = mousePosition;
-    const ctx = outputTextureRef.current.getContext("2d");
 
     ctx?.drawImage(
-      brushTextureRef.current,
+      brushTexture,
       textureSize.x * uv.x - brushSize / 2,
       textureSize.y * (1 - uv.y) - brushSize / 2
     );
     store.setState({
-      terrainAlbedo: outputTextureRef.current,
+      terrainAlbedo: canvasRef.current,
     });
   }
-  return <canvas ref={outputTextureRef} />;
+  return <canvas ref={canvasRef} />;
 }
 
 export default OutputTexture;

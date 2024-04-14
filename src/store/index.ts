@@ -11,7 +11,7 @@ interface StoreState {
   isTexturePainting: any;
   isTexturePaintMode: any;
   textures: any;
-  activeTextureName: any;
+  activeTexture: any;
   terrainAlbedo: any;
   activeBrushSize: number;
   activeBrushFade: number;
@@ -28,7 +28,7 @@ const store = create<StoreState>(() => ({
   isTexturePainting: null,
   isTexturePaintMode: null,
   textures: [],
-  activeTextureName: null,
+  activeTexture: null,
   terrainAlbedo: null,
   activeBrushSize: 80,
   activeBrushFade: 0.5,
