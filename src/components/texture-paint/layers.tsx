@@ -46,6 +46,7 @@ function Layers({ layers, onSettingsChanged }: any) {
       <Flex>
         {layers.map(({ name }: any) => (
           <Flex
+            key={name}
             alignItems={"center"}
             padding="8px"
             width="100%"
@@ -68,7 +69,11 @@ function Layers({ layers, onSettingsChanged }: any) {
                   <Flex flexDirection={"column"} gap="4px">
                     {["albedo", "normal", "displacement"].map(
                       (setting: string) => (
-                        <Flex justifyContent={"space-between"} width="100%">
+                        <Flex
+                          justifyContent={"space-between"}
+                          width="100%"
+                          key={setting}
+                        >
                           <FormLabel htmlFor={setting}>{setting}</FormLabel>
                           <Switch id={setting} isChecked />
                         </Flex>

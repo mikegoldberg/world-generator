@@ -1,11 +1,12 @@
 import { useCallback, useContext, useEffect, useRef } from "react";
-import { TextureContext } from "../";
+import { BrushContext } from "..";
+import { TextureContext } from "../texture";
 import store from "../../../store";
 
 function BrushTexture() {
   const { isTexturePainting, isTexturePaintMode, mousePosition } = store();
-  const { brushSize, brushFade, textureSize, setBrushTexture, samplerTexture } =
-    useContext(TextureContext);
+  const { brushSize, brushFade, textureSize } = useContext(BrushContext);
+  const { samplerTexture, setBrushTexture } = useContext(TextureContext);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const resetBrush = useCallback(() => {
@@ -40,7 +41,12 @@ function BrushTexture() {
   }, [brushSize, brushFade, canvasRef.current]);
 
   useEffect(() => {
-    if (!mousePosition || !canvasRef.current || !isTexturePaintMode) {
+    if (
+      !samplerTexture ||
+      !mousePosition ||
+      !canvasRef.current ||
+      !isTexturePaintMode
+    ) {
       return;
     }
 

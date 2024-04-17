@@ -1,9 +1,10 @@
 import { useContext, useEffect, useRef } from "react";
-import { TextureContext } from "../";
+import { TextureContext } from "../texture";
+import { BrushContext } from "..";
 
 function SamplerTexture() {
-  const { sourceTexture, setSamplerTexture, textureSize, brushSize } =
-    useContext(TextureContext);
+  const { textureSize, brushSize } = useContext(BrushContext);
+  const { sourceTexture, setSamplerTexture } = useContext(TextureContext);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {

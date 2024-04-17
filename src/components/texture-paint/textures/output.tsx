@@ -1,11 +1,12 @@
 import { useContext, useEffect, useRef } from "react";
 import store from "../../../store";
-import { TextureContext } from "../";
+import { TextureContext } from "../texture";
+import { BrushContext } from "..";
 
 function OutputTexture() {
   const { isTexturePainting, mousePosition } = store();
-  const { textureSize, brushTexture, brushSize, defaultColor } =
-    useContext(TextureContext);
+  const { textureSize, brushSize, defaultColor } = useContext(BrushContext);
+  const { brushTexture, setOutput } = useContext(TextureContext);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ function OutputTexture() {
     ctx.fillRect(0, 0, textureSize.x, textureSize.y);
 
     store.setState({
-      terrainAlbedo: canvasRef.current,
+      albedo: canvasRef.current,
     });
   }, []);
 
@@ -50,9 +51,8 @@ function OutputTexture() {
       textureSize.x * uv.x - brushSize / 2,
       textureSize.y * (1 - uv.y) - brushSize / 2
     );
-    store.setState({
-      terrainAlbedo: canvasRef.current,
-    });
+
+    setOutput(canvasRef.current);
   }
   return <canvas ref={canvasRef} />;
 }

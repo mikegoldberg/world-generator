@@ -3,11 +3,11 @@ import { useContext, useState } from "react";
 import store from "../../store";
 import Brush from "../brush";
 import TextureSelection from "../texture-selection";
-import { TextureContext } from ".";
+import { BrushContext } from ".";
 
 function Options() {
   const { brushSize, setBrushSize, brushFade, setBrushFade } =
-    useContext(TextureContext);
+    useContext(BrushContext);
   const { isTexturePaintMode } = store();
 
   function handleFadeChanged(fade: number) {

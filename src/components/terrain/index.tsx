@@ -14,7 +14,8 @@ function Terrain() {
     isTexturePaintMode,
     mousePosition,
     showWireframe,
-    terrainAlbedo,
+    albedo,
+    normal,
     activeBrushFade,
     activeBrushSize,
   } = store();
@@ -137,7 +138,8 @@ function Terrain() {
           baseMaterial={MeshPhysicalMaterial}
           vertexShader={groundShader.vertexShader}
           fragmentShader={groundShader.fragmentShader}
-          map={terrainAlbedo ? new CanvasTexture(terrainAlbedo) : undefined}
+          map={albedo ? new CanvasTexture(albedo) : undefined}
+          normalMap={normal ? new CanvasTexture(normal) : undefined}
           silent
           uniforms={uniforms}
           wireframe={showWireframe}
