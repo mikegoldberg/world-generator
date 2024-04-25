@@ -14,8 +14,10 @@ interface StoreState {
   activeTexture: any;
   albedo: any;
   normal: any;
+  roughness: any;
   activeBrushSize: number;
   activeBrushFade: number;
+  activeBrushScale: number;
 }
 
 const store = create<StoreState>(() => ({
@@ -32,8 +34,10 @@ const store = create<StoreState>(() => ({
   activeTexture: null,
   albedo: null,
   normal: null,
+  roughness: null,
   activeBrushSize: 80,
   activeBrushFade: 0.5,
+  activeBrushScale: 1,
 }));
 
 export default store;

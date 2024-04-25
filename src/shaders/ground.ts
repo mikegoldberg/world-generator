@@ -15,13 +15,14 @@ uniform vec2 uResolution;
 uniform bool uBrushEnabled;
 uniform float uBrushSize;
 uniform float uBrushFade;
-uniform sampler2D uGrassAlbedo;
+// uniform sampler2D uAlbedo;
 
 varying vec2 vUv;
 varying vec2 vPosition;
 
 void main() {
     // vec2 uv = uMouse.xy / uResolution.xy;
+
     float x =  uMouse.x  - vPosition.x;
     float y =  uMouse.y - vPosition.y * -1.0;
     vec3 baseColor = vec3(0, 1.0, 0);
@@ -37,7 +38,8 @@ void main() {
         }
     }
 
-    // csm_DiffuseColor = texture2D(uGrassAlbedo, vUv * 12.0);
+    // csm_DiffuseColor = texture2D(uAlbedo);
+    // csm_FragColor = vec4(0.0, 0.6, 0.1, 1.0);
 }
 `;
 

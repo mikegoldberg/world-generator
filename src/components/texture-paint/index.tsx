@@ -12,9 +12,10 @@ export { BrushContext };
 function TexturePaint() {
   const { sourceTexture } = useTextures();
   const [isDebugEnabled, setIsDebugEnabled] = useState(false);
-  const defaultColor = useConst("#11aa33");
+  const defaultColor = useConst("#008822");
   const [brushSize, setBrushSize] = useState(100);
   const [brushFade, setBrushFade] = useState(0.5);
+  const [brushScale, setBrushScale] = useState(1);
   const [textureSize, setTextureSize] = useState({ x: 1024, y: 1024 });
   const [layers] = useState([
     {
@@ -22,7 +23,7 @@ function TexturePaint() {
       options: {
         albedo: true,
         normal: true,
-        roughness: false,
+        roughness: true,
       },
     },
   ]);
@@ -38,6 +39,8 @@ function TexturePaint() {
         setTextureSize,
         defaultColor,
         sourceTexture,
+        brushScale,
+        setBrushScale,
       }}
     >
       <Settings />
@@ -51,13 +54,15 @@ function TexturePaint() {
           display={isDebugEnabled ? "flex" : "none"}
         >
           {sourceTexture &&
-            Object.entries(sourceTexture).map(([property, texture]: any) => (
-              <Texture
-                key={property}
-                property={property}
-                sourceTexture={texture}
-              />
-            ))}
+            Object.entries(sourceTexture)
+              .filter(([property]: any) => ["albedo"].includes(property))
+              .map(([property, texture]: any) => (
+                <Texture
+                  key={property}
+                  property={property}
+                  sourceTexture={texture}
+                />
+              ))}
         </Flex>
       </Portal>
     </BrushContext.Provider>

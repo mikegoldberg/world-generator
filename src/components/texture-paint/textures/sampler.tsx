@@ -17,7 +17,7 @@ function SamplerTexture() {
     const src = sourceTexture;
     const srcW = textureSize.x;
     const srcH = textureSize.y;
-    const pad = brushSize / 2;
+    const pad = 0; //brushSize / 2;
 
     canvasRef.current.width = srcW + brushSize;
     canvasRef.current.height = srcH + brushSize;

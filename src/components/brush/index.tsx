@@ -5,80 +5,63 @@ import Preview from "./preview";
 interface BrushProps {
   onSizeChanged: (value: number) => void;
   onFadeChanged: (value: number) => void;
+  onScaleChanged: (value: number) => void;
   size: number;
   fade: number;
+  scale: number;
   maxSize: number;
   maxFade: number;
+  maxScale: number;
+  children?: any;
 }
 
 function Brush({
   size = 80,
   fade = 0.5,
+  scale = 1,
   maxSize = 200,
+  maxScale = 8,
   maxFade = 0.5,
   onSizeChanged,
   onFadeChanged,
+  onScaleChanged,
+  children,
 }: BrushProps) {
-  // const brush = useRef<HTMLCanvasElement | null>(null);
-
-  // useEffect(() => {
-  //   resetBrush();
-  // }, [brush, size]);
-
-  // function resetBrush() {
-  //   const ctx = brush.current?.getContext("2d");
-
-  //   if (!ctx) {
-  //     return;
-  //   }
-
-  //   ctx.reset();
-  //   ctx.beginPath();
-  //   const radius = size / 2;
-  //   const radialGradient = ctx.createRadialGradient(
-  //     radius,
-  //     radius,
-  //     0,
-  //     radius,
-  //     radius,
-  //     radius
-  //   );
-  //   radialGradient.addColorStop(0, "rgba(255, 155, 0, 1)");
-  //   radialGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
-  //   ctx.fillStyle = radialGradient;
-  //   ctx.arc(radius, radius, radius, Math.PI * 2, 0);
-  //   ctx.fill();
-  //   ctx.globalCompositeOperation = "source-in";
-  // }
-
   return (
     <Box
       padding="10px"
       background={"rgba(0, 0, 0, 0.1)"}
       border={"1px solid rgba(255, 255, 255, .1)"}
     >
-      <Flex height="100px" gap="8px">
-        <Preview size={size} fade={fade} maxSize={maxSize} />
-        <Flex gap="12px" flex={1}>
-          <SliderControl
-            label="Size"
-            max={maxSize}
-            min={40}
-            step={1}
-            value={size}
-            orientation="vertical"
-            onChange={onSizeChanged}
-          />
-          <SliderControl
-            label="Fade"
-            max={maxFade}
-            min={0}
-            step={0.05}
-            value={fade}
-            orientation="vertical"
-            onChange={onFadeChanged}
-          />
+      <Flex gap="12px" flexDirection={"column"}>
+        <Flex gap="6px">
+          <Preview size={size} fade={fade} maxSize={maxSize} />
+          {children}
         </Flex>
+        <SliderControl
+          label="Size"
+          max={maxSize}
+          min={40}
+          step={1}
+          value={size}
+          onChange={onSizeChanged}
+        />
+        <SliderControl
+          label="Fade"
+          max={maxFade}
+          min={0}
+          step={0.05}
+          value={fade}
+          onChange={onFadeChanged}
+        />
+        <SliderControl
+          label="Scale"
+          max={maxScale}
+          min={0}
+          step={0.1}
+          value={scale}
+          onChange={onScaleChanged}
+        />
       </Flex>
     </Box>
   );

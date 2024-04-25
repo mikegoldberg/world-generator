@@ -54,6 +54,7 @@ function OutputTexture() {
 
     setOutput(canvasRef.current);
   }
+
   return <canvas ref={canvasRef} />;
 }
 

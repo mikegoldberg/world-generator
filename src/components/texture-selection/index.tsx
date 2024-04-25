@@ -22,6 +22,9 @@ function TextureSelection() {
           <PopoverTrigger>
             <Button
               height="100px"
+              padding="0"
+              flex={1}
+              borderRadius={"2px"}
               backgroundPosition={"center"}
               {...(texturePreview
                 ? { backgroundImage: `url('${texturePreview}')` }
@@ -40,7 +43,17 @@ function TextureSelection() {
               }}
               backgroundSize={"cover"}
             >
-              {!texturePreview && <Text>{"Select a texture"}</Text>}
+              {!texturePreview && (
+                <Text
+                  width="100%"
+                  whiteSpace={"wrap"}
+                  fontSize="14px"
+                  lineHeight="22px"
+                  color={"rgba(255, 255, 255, 0.6)"}
+                >
+                  {"Select Texture"}
+                </Text>
+              )}
             </Button>
           </PopoverTrigger>
           <PopoverContent width="160px">

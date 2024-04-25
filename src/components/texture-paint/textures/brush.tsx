@@ -5,7 +5,8 @@ import store from "../../../store";
 
 function BrushTexture() {
   const { isTexturePainting, isTexturePaintMode, mousePosition } = store();
-  const { brushSize, brushFade, textureSize } = useContext(BrushContext);
+  const { brushSize, brushFade, textureSize, brushScale } =
+    useContext(BrushContext);
   const { samplerTexture, setBrushTexture } = useContext(TextureContext);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -38,7 +39,7 @@ function BrushTexture() {
     ctx.arc(radius, radius, radius, Math.PI * 2, 0);
     ctx.fill();
     ctx.globalCompositeOperation = "source-in";
-  }, [brushSize, brushFade, canvasRef.current]);
+  }, [brushSize, brushFade, brushScale, canvasRef.current]);
 
   useEffect(() => {
     if (
@@ -57,16 +58,24 @@ function BrushTexture() {
     const y = textureSize.y * (1 - uv.y) - brushSize / 2;
     const ctx = canvasRef.current.getContext("2d");
 
+    // drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
     ctx?.drawImage(
       samplerTexture,
-      ((x % samplerTexture.width) + brushSize / 2) * -1,
-      ((y % samplerTexture.height) + brushSize / 2) * -1
+      (x * brushScale) % (samplerTexture.width - brushSize),
+      (y * brushScale) % (samplerTexture.height - brushSize),
+      brushSize * brushScale,
+      brushSize * brushScale,
+      0,
+      0,
+      brushSize,
+      brushSize
     );
 
     setBrushTexture(canvasRef.current);
   }, [
     brushSize,
     brushFade,
+    brushScale,
     isTexturePaintMode,
     isTexturePainting,
     canvasRef.current,

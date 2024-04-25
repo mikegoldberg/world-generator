@@ -13,7 +13,7 @@ interface SliderControlProps {
   max: number;
   min: number;
   step: number;
-  orientation?: "horizontal" | "vertical";
+  // orientation?: "horizontal" | "vertical";
   onChange: (value: number) => void;
 }
 function SliderControl({
@@ -22,16 +22,16 @@ function SliderControl({
   min,
   step,
   value,
-  orientation = "horizontal",
+  // orientation = "horizontal",
   onChange,
 }: SliderControlProps) {
   return (
     <Flex
-      flexDirection={"column"}
-      flexFlow={orientation === "horizontal" ? "column" : "column-reverse"}
+      // flexDirection={"column"}
+      // flexFlow={orientation === "horizontal" ? "column" : "column-reverse"}
       gap="5px"
     >
-      <FormLabel margin={0} fontSize={"sm"}>
+      <FormLabel margin={0} fontSize={"sm"} width="80px">
         {label}
       </FormLabel>
       <Slider
@@ -41,7 +41,7 @@ function SliderControl({
         min={min}
         step={step}
         onChange={onChange}
-        orientation={orientation}
+        // orientation={orientation}
       >
         <SliderTrack>
           <SliderFilledTrack />

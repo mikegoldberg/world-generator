@@ -16,6 +16,7 @@ function Terrain() {
     showWireframe,
     albedo,
     normal,
+    roughness,
     activeBrushFade,
     activeBrushSize,
   } = store();
@@ -25,10 +26,17 @@ function Terrain() {
     uMouse: { value: new Vector2(0, 0) },
     uResolution: { value: new Vector2(window.innerWidth, window.innerHeight) },
     uBrushEnabled: { value: false },
-    uGrassAlbedo: { value: null },
+    uAlbedo: { value: null },
     uBrushSize: { value: 80 },
     uBrushFade: { value: 0.5 },
   });
+
+  useEffect(() => {
+    setUniforms({
+      ...uniforms,
+      uAlbedo: albedo,
+    });
+  }, [albedo]);
 
   useEffect(() => {
     setUniforms({
@@ -138,8 +146,11 @@ function Terrain() {
           baseMaterial={MeshPhysicalMaterial}
           vertexShader={groundShader.vertexShader}
           fragmentShader={groundShader.fragmentShader}
-          map={albedo ? new CanvasTexture(albedo) : undefined}
-          normalMap={normal ? new CanvasTexture(normal) : undefined}
+          map={
+            uniforms.uAlbedo ? new CanvasTexture(uniforms.uAlbedo) : undefined
+          }
+          // normalMap={normal ? new CanvasTexture(normal) : undefined}
+          // roughness={roughness ? roughness : undefined}
           silent
           uniforms={uniforms}
           wireframe={showWireframe}

@@ -4,6 +4,7 @@ import { CameraControls } from "@react-three/drei";
 import Camera from "../camera";
 import { Color } from "three";
 import store from "../../store";
+import Water from "../water";
 
 function Canvas() {
   const { isSculptMode, isTexturePaintMode } = store();
@@ -27,7 +28,8 @@ function Canvas() {
         shadow-mapSize-width={312}
         shadow-mapSize-height={312}
       />
-      <Terrain />
+      {/* <Terrain /> */}
+      <Water />
     </ThreeCanvas>
   );
 }
